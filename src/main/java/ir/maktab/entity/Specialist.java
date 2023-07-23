@@ -1,6 +1,5 @@
 package ir.maktab.entity;
 
-import ir.maktab.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +18,7 @@ public class Specialist extends Person {
             name="Specialist_SubServices",
             joinColumns=@JoinColumn(name="Specialist_ID", referencedColumnName="id"),
             inverseJoinColumns=@JoinColumn(name="SubServices_ID", referencedColumnName="id"))
-    Set<SubServices> subServices;
+    Set<SubDuty> subDuties;
     @OneToOne
     Wallet wallet;
     @Lob

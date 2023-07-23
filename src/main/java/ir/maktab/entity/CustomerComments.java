@@ -3,7 +3,6 @@ package ir.maktab.entity;
 import ir.maktab.base.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -14,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class CustomerOpinions extends BaseEntity<Long> {
+public class CustomerComments extends BaseEntity<Long> {
 
     @ManyToOne
     Specialist specialist;

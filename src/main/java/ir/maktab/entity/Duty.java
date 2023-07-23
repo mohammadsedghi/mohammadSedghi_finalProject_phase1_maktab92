@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Services extends BaseEntity<Long> {
+public class Duty extends BaseEntity<Long> {
     @NotNull
     @Length(message ="name of services must be 100 character",max = 100)
     @Pattern(message = "Services must be just letters",regexp = "^[a-zA-Z]+$")

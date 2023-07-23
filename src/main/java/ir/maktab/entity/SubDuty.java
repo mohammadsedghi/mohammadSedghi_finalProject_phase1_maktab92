@@ -3,7 +3,6 @@ package ir.maktab.entity;
 import ir.maktab.base.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -15,9 +14,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class SubServices extends BaseEntity<Long> {
+public class SubDuty extends BaseEntity<Long> {
     @ManyToOne
-    Services services;
+    Duty duty;
     @NotNull(message = "Please enter your name this field must be have value")
     @Pattern(message = "SubServices name must be just letters",regexp = "^[a-zA-Z]+$")
     String name;
