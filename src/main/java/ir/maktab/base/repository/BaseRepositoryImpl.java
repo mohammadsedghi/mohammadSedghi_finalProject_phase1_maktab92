@@ -39,10 +39,5 @@ public abstract class BaseRepositoryImpl <E extends BaseEntity<ID>,ID extends Se
     public Optional<E> findById(ID id) {
         return Optional.empty();
     }
-
-    @Override
-    public Session getSession() {
-        return null;
-    }
 public abstract Class<E> getEnitytyClass();
 }
