@@ -18,7 +18,6 @@ public class AddressRepositoryImpl extends BaseRepositoryImpl<Address,Long>
     public Session getSession() {
         return session;
     }
-
     @Override
     public Class<Address> getEnitytyClass() {
         return Address.class;
