@@ -17,27 +17,30 @@ public abstract class BaseRepositoryImpl <E extends BaseEntity<ID>,ID extends Se
 
     @Override
     public E save(E entity) {
-        return null;
+        session.persist(entity);
+        return entity;
     }
 
     @Override
     public E update(E entity) {
-        return null;
+         session.merge(entity);
+         return entity;
     }
 
     @Override
     public E remove(E entity) {
-        return null;
+        session.remove(entity);
+        return entity;
     }
 
     @Override
     public Collection<E> load() {
-        return null;
+        return session.createQuery("from "+getEnitytyClass().getSimpleName(),getEnitytyClass()).getResultList();
     }
 
     @Override
     public Optional<E> findById(ID id) {
-        return Optional.empty();
+        return Optional.ofNullable(session.find(getEnitytyClass(),id));
     }
 public abstract Class<E> getEnitytyClass();
 }

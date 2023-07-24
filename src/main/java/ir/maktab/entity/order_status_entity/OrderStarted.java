@@ -1,4 +1,14 @@
 package ir.maktab.entity.order_status_entity;
 
-public class OrderStarted {
+import ir.maktab.base.BaseEntity;
+import jakarta.persistence.Entity;
+import lombok.*;
+
+@Setter
+@Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class OrderStarted extends BaseEntity<Long> {
 }
