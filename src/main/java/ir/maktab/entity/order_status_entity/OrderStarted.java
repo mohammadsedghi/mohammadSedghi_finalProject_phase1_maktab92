@@ -11,4 +11,5 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 public class OrderStarted extends BaseEntity<Long> {
+    String name;
 }

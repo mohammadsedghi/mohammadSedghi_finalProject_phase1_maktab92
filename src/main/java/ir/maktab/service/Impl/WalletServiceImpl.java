@@ -1,13 +1,88 @@
 package ir.maktab.service.Impl;
 
-import ir.maktab.base.service.BaseServiceImpl;
+
 import ir.maktab.entity.Wallet;
+import ir.maktab.repository.Impl.WalletRepositoryImpl;
 import ir.maktab.repository.WalletRepository;
 import ir.maktab.service.WalletService;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.TransactionException;
 
-public class WalletServiceImpl extends BaseServiceImpl<Wallet, WalletRepository,Long >
-        implements WalletService {
-    public WalletServiceImpl(WalletRepository repository) {
-        super(repository);
+import java.util.Collection;
+import java.util.Optional;
+
+public class WalletServiceImpl  implements WalletService,WalletRepository{
+    private Session session;
+    private Transaction transaction;
+    private WalletRepository walletRepository;
+
+    public WalletServiceImpl(Session session) {
+        this.session = session;
+        transaction=session.getTransaction();
+        walletRepository=new WalletRepositoryImpl(session);
+    }
+
+    @Override
+    public Wallet save(Wallet wallet) {
+        try {
+           transaction.begin();
+            walletRepository.save(wallet);
+            transaction.commit();
+        } catch (TransactionException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } //finally {
+//            walletRepository.getSession().close();
+//        }
+        return wallet;
+    }
+
+    @Override
+    public Wallet update(Wallet wallet) {
+        try {
+            transaction.begin();
+            walletRepository.update(wallet);
+            transaction.commit();
+        } catch (TransactionException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            walletRepository.getSession().close();
+        }
+        return wallet;
+    }
+
+    @Override
+    public Wallet remove(Wallet wallet) {
+        try {
+            transaction.begin();
+            walletRepository.remove(wallet);
+            transaction.commit();
+        } catch (TransactionException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            walletRepository.getSession().close();
+        }
+        return wallet;
+    }
+
+    @Override
+    public Collection<Wallet> load() {
+        return walletRepository.load();
+    }
+
+    @Override
+    public Optional<Wallet> findById(Long id) {
+        return walletRepository.findById(id);
+    }
+
+    @Override
+    public Session getSession() {
+        return session;
     }
 }

@@ -1,7 +1,7 @@
 package ir.maktab.repository;
 
 import ir.maktab.base.repository.BaseRepository;
-import ir.maktab.entity.Order;
+import ir.maktab.entity.Orders;
 
-public interface OrderRepository extends BaseRepository<Order,Long> {
+public interface OrderRepository extends BaseRepository<Orders,Long> {
 }

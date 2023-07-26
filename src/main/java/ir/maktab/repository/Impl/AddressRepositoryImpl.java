@@ -5,8 +5,7 @@ import ir.maktab.entity.Address;
 import ir.maktab.repository.AddressRepository;
 import org.hibernate.Session;
 
-public class AddressRepositoryImpl extends BaseRepositoryImpl<Address,Long>
-        implements AddressRepository {
+public class AddressRepositoryImpl extends BaseRepositoryImpl<Address,Long> implements AddressRepository {
     private final Session session;
 
     public AddressRepositoryImpl(Session session) {

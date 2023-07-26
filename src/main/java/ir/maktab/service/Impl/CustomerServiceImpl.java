@@ -1,13 +1,95 @@
 package ir.maktab.service.Impl;
 
-import ir.maktab.base.service.BaseServiceImpl;
-import ir.maktab.entity.Address;
-import ir.maktab.repository.AddressRepository;
-import ir.maktab.service.AddressService;
+import ir.maktab.base.BaseEntity;
+import ir.maktab.entity.Customer;
+import ir.maktab.repository.CustomerRepository;
+import ir.maktab.repository.Impl.CustomerRepositoryImpl;
+import ir.maktab.service.CustomerService;
+import ir.maktab.util.CheckValidation;
+import jakarta.persistence.NoResultException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.TransactionException;
+import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
-public class CustomerServiceImpl extends BaseServiceImpl<Address, AddressRepository,Long >
-        implements AddressService {
-    public CustomerServiceImpl(AddressRepository repository) {
-        super(repository);
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.hibernate.query.sqm.tree.SqmNode.log;
+
+public class CustomerServiceImpl implements CustomerService {
+    private CustomerRepository customerRepository;
+    private Session session;
+CheckValidation checkValidation=new CheckValidation();
+
+    public CustomerServiceImpl(Session session) {
+        this.session = session;
+        customerRepository = new CustomerRepositoryImpl(session);
+    }
+    public Customer addCustomer(Customer customer) {
+        if (!checkValidation.isValid(customer)) return new Customer();
+        Transaction transaction = session.getTransaction();
+        customerRepository.findByEmail(customer.getEmail()).ifPresentOrElse(
+                tempCustomer -> {
+                }, () -> {
+                    try {
+                        transaction.begin();
+                        customerRepository.save(customer);
+                        transaction.commit();
+                    } catch (TransactionException e) {
+                        System.out.println(e);
+                        transaction.rollback();
+
+                    }
+                });
+        return customer;
+    }
+
+    public Customer updateCustomer(Customer customer) {
+        Transaction transaction = session.getTransaction();
+        try {
+            transaction.begin();
+            customerRepository.update(customer);
+            transaction.commit();
+        } catch (TransactionException e) {
+            transaction.rollback();
+        } finally {
+            customerRepository.getSession().close();
+
+        }
+        return customer;
+    }
+    public Customer removeCustomer(Customer customer) {
+        Transaction transaction = session.getTransaction();
+        try {
+            transaction.begin();
+            customerRepository.remove(customer);
+            transaction.commit();
+        } catch (TransactionException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            customerRepository.getSession().close();
+
+        }
+        return customer;
+    }
+
+    public Collection<Customer> load() {
+        return customerRepository.load();
+    }
+
+    public Optional<Customer> findById(Long id) {
+        return customerRepository.findById(id);
+    }
+
+    public Session getSession() {
+        return session;
     }
 }

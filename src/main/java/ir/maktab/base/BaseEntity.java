@@ -16,6 +16,6 @@ import java.io.Serializable;
 @MappedSuperclass
 public class BaseEntity <ID extends Serializable>implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private ID id;
 }

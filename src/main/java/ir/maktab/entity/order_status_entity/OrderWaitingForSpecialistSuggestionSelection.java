@@ -11,4 +11,5 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 public class OrderWaitingForSpecialistSuggestionSelection extends BaseEntity<Long> {
+    String name;
 }

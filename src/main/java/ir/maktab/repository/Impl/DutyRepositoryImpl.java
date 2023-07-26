@@ -2,7 +2,6 @@ package ir.maktab.repository.Impl;
 
 import ir.maktab.base.repository.BaseRepositoryImpl;
 import ir.maktab.entity.Duty;
-import ir.maktab.entity.Order;
 import ir.maktab.repository.DutyRepository;
 import org.hibernate.Session;
 

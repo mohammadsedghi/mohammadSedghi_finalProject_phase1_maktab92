@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 @Setter
 @Getter
@@ -17,11 +18,15 @@ import lombok.*;
 public class SubDuty extends BaseEntity<Long> {
     @ManyToOne
     Duty duty;
-    @NotNull(message = "Please enter your name this field must be have value")
-    @Pattern(message = "SubServices name must be just letters",regexp = "^[a-zA-Z]+$")
+    @NotNull(message = "this field must be have value")
+    @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
+    @Length(message ="lastName must be 100 character",max = 100)
     String name;
-    @Positive(message = "Invalid Rating, Value should be positive")
-    Double price;
-    @NotNull(message = "Please enter your name this field must be have value")
+    @NotNull(message = "this field must be have value")
+    @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
+    Double basePrice;
+    @NotNull(message = "this field must be have value")
+    @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
+    @Length(message ="lastName must be 100 character",max = 100)
     String description;
 }

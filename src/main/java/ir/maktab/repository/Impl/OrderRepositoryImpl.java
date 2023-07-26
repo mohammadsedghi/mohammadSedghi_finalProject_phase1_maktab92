@@ -1,11 +1,11 @@
 package ir.maktab.repository.Impl;
 
 import ir.maktab.base.repository.BaseRepositoryImpl;
-import ir.maktab.entity.Order;
+import ir.maktab.entity.Orders;
 import ir.maktab.repository.OrderRepository;
 import org.hibernate.Session;
 
-public class OrderRepositoryImpl extends BaseRepositoryImpl<Order,Long>
+public class OrderRepositoryImpl extends BaseRepositoryImpl<Orders,Long>
         implements OrderRepository {
     private final Session session;
 
@@ -20,7 +20,7 @@ public class OrderRepositoryImpl extends BaseRepositoryImpl<Order,Long>
     }
 
     @Override
-    public Class<Order> getEnitytyClass() {
-        return Order.class;
+    public Class<Orders> getEnitytyClass() {
+        return Orders.class;
     }
 }

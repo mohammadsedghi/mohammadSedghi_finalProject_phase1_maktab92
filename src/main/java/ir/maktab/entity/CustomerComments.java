@@ -2,9 +2,8 @@ package ir.maktab.entity;
 
 import ir.maktab.base.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Setter
@@ -15,9 +14,8 @@ import lombok.*;
 @Entity
 public class CustomerComments extends BaseEntity<Long> {
 
-    @ManyToOne
-    Specialist specialist;
-    @Positive
-    @Pattern(message = "score must be just digit",regexp = "^\\d+$")
+    @OneToOne
+    Orders orders;
+    @NotNull(message = "this field must be have value")
     Integer score;
 }
