@@ -49,7 +49,6 @@ CheckValidation checkValidation=new CheckValidation();
                 });
         return customer;
     }
-
     public Customer updateCustomer(Customer customer) {
         Transaction transaction = session.getTransaction();
         try {
