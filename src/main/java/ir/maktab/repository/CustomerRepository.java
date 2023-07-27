@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface CustomerRepository extends BaseRepository<Customer,Long> {
     Optional<Customer> findByEmail(String email);
+    Optional<Customer> findByUsernameAndPassword(Customer customer);
 }

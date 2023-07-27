@@ -41,4 +41,6 @@ public class SpecialistRepositoryImpl extends BaseRepositoryImpl<Specialist,Long
             return Optional.empty();
         }
     }
+
+
 }

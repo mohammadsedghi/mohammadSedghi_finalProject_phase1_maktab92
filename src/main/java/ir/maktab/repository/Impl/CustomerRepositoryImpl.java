@@ -44,4 +44,9 @@ try {
    return Optional.empty();
 }
     }
+
+    @Override
+    public Optional<Customer> findByUsernameAndPassword(Customer customer) {
+        return Optional.empty();
+    }
 }

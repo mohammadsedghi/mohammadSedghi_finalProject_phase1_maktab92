@@ -7,13 +7,16 @@ import ir.maktab.repository.Impl.SpecialistRepositoryImpl;
 import ir.maktab.repository.SpecialistRepository;
 import ir.maktab.service.SpecialistService;
 import ir.maktab.util.CheckValidation;
+import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -91,8 +94,29 @@ public class SpecialistServiceImpl  implements SpecialistService {
                 });
         return specialist;
     }
-public byte[] convertImageToImageDats(String imagePath)throws IOException {
-    File imageFile = new File(imagePath);
-    return Files.readAllBytes(imageFile.toPath());
+public String convertImageToImageData(String imagePath)throws IOException {
+    try {
+        byte[] fileContent = FileUtils.readFileToByteArray(new File(imagePath));
+        String encodedString = Base64.getEncoder().encodeToString(fileContent);
+        return encodedString;
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return null;
 }
+    public  void convertByteArrayToImage(Specialist specialist) throws IOException {
+        Optional<Specialist> SpecialistId = specialistRepository.findById(specialist.getId());
+       SpecialistId.ifPresentOrElse(member->{
+           byte[] imageData = Base64.getDecoder().decode(member.getImageData());
+           String newFilePath = "t.jpg";
+           try (FileOutputStream fileOutputStream = new FileOutputStream(newFilePath)) {
+               fileOutputStream.write(imageData);
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       }, Specialist::new
+           );
+    }
+
+
 }

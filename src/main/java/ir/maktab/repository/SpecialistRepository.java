@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface SpecialistRepository extends BaseRepository<Specialist,Long> {
     Optional<Specialist> findByEmail(String email);
+
 }

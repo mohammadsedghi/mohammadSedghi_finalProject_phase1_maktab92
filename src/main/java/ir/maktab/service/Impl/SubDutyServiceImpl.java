@@ -5,6 +5,7 @@ import ir.maktab.entity.SubDuty;
 import ir.maktab.repository.Impl.SubDutyRepositoryImpl;
 import ir.maktab.repository.SubDutyRepository;
 import ir.maktab.service.SubDutyService;
+import ir.maktab.util.CheckValidation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
@@ -12,19 +13,18 @@ import org.hibernate.TransactionException;
 import java.util.Collection;
 import java.util.Optional;
 
-public class SubDutyServiceImpl implements SubDutyService,SubDutyRepository {
+public class SubDutyServiceImpl implements SubDutyService {
 private Session session;
-private Transaction transaction;
 private SubDutyRepository subDutyRepository;
-
+CheckValidation checkValidation=new CheckValidation();
     public SubDutyServiceImpl(Session session) {
         this.session = session;
-        transaction=session.getTransaction();
         subDutyRepository=new SubDutyRepositoryImpl(session);
     }
 
-    @Override
-    public SubDuty save(SubDuty subDuty) {
+    public SubDuty addSubDuty(SubDuty subDuty) {
+        Transaction transaction=session.getTransaction();
+        if (!checkValidation.isValid(subDuty)){return new SubDuty();}
           try {
             transaction.begin();
             subDutyRepository.save(subDuty);
@@ -33,14 +33,13 @@ private SubDutyRepository subDutyRepository;
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            subDutyRepository.getSession().close();
         }
         return subDuty;
     }
 
-    @Override
+
     public SubDuty update(SubDuty subDuty) {
+        Transaction transaction=session.getTransaction();
         try {
             transaction.begin();
             subDutyRepository.update(subDuty);
@@ -55,8 +54,8 @@ private SubDutyRepository subDutyRepository;
         return subDuty;
     }
 
-    @Override
     public SubDuty remove(SubDuty subDuty) {
+        Transaction transaction=session.getTransaction();
         try {
             transaction.begin();
             subDutyRepository.remove(subDuty);
@@ -71,18 +70,13 @@ private SubDutyRepository subDutyRepository;
         return subDuty;
     }
 
-    @Override
+
     public Collection<SubDuty> load() {
         return subDutyRepository.load();
     }
 
-    @Override
     public Optional<SubDuty> findById(Long id) {
         return subDutyRepository.findById(id);
     }
 
-    @Override
-    public Session getSession() {
-        return session;
-    }
 }

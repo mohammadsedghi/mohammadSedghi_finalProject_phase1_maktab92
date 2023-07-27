@@ -3,10 +3,7 @@ package ir.maktab;
 import ir.maktab.base.repository.util.HibernateUtil;
 import ir.maktab.entity.*;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
-import ir.maktab.service.Impl.AddressServiceImpl;
-import ir.maktab.service.Impl.CustomerServiceImpl;
-import ir.maktab.service.Impl.SpecialistServiceImpl;
-import ir.maktab.service.Impl.WalletServiceImpl;
+import ir.maktab.service.Impl.*;
 import org.hibernate.Session;
 
 import java.io.IOException;
@@ -44,8 +41,14 @@ public class Main {
         Set<SubDuty> subDuties=new HashSet<>();
         subDuties.add(subDuty);
         duty.setSubDuties(subDuties);
-        String imagePath = "/ir/maktab/util/images/2.jpg";
-            byte[] imageBytes =  specialistService.convertImageToImageDats(imagePath);
+        DutyServiceImpl dutyService=new DutyServiceImpl(session);
+        SubDutyServiceImpl subDutyService=new SubDutyServiceImpl(session);
+        dutyService.addDuty(duty);
+        subDutyService.addSubDuty(subDuty);
+
+       // String imagePath = "/ir/maktab/util/images/2.jpg";
+       // String imagePath = "src/main/java/ir/maktab/2.jpg";
+        String imagePath = "src/main/java/ir/maktab/util/images/2.jpg";
         Specialist specialist=Specialist.builder()
                 .firstName("ali")
                 .lastname("sedghi")
@@ -57,8 +60,9 @@ public class Main {
                 .status(SpecialistRegisterStatus.NEW_SPECIALIST)
                 .subDuties(subDuties)
                 .wallet(wallet1)
-                .imageData(imageBytes)
+                .imageData(specialistService.convertImageToImageData(imagePath))
                 .build();
         specialistService.addSpecialist(specialist);
+        specialistService.convertByteArrayToImage(specialist);
     }
 }

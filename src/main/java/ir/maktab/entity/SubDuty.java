@@ -23,7 +23,7 @@ public class SubDuty extends BaseEntity<Long> {
     @Length(message ="lastName must be 100 character",max = 100)
     String name;
     @NotNull(message = "this field must be have value")
-    @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
+   // @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
     Double basePrice;
     @NotNull(message = "this field must be have value")
     @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")

@@ -1,26 +1,20 @@
 package ir.maktab.service.Impl;
 
-import ir.maktab.base.BaseEntity;
+
 import ir.maktab.entity.Customer;
 import ir.maktab.repository.CustomerRepository;
 import ir.maktab.repository.Impl.CustomerRepositoryImpl;
 import ir.maktab.service.CustomerService;
 import ir.maktab.util.CheckValidation;
-import jakarta.persistence.NoResultException;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
-import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
-
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
-import static org.hibernate.query.sqm.tree.SqmNode.log;
+
+
 
 public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;

@@ -3,6 +3,7 @@ import ir.maktab.entity.Duty;
 import ir.maktab.repository.DutyRepository;
 import ir.maktab.repository.Impl.DutyRepositoryImpl;
 import ir.maktab.service.DutyService;
+import ir.maktab.util.CheckValidation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
@@ -10,19 +11,19 @@ import org.hibernate.TransactionException;
 import java.util.Collection;
 import java.util.Optional;
 
-public class DutyServiceImpl implements DutyService,DutyRepository {
+public class DutyServiceImpl implements DutyService {
     private DutyRepository dutyRepository;
     private Session session;
-    private Transaction transaction;
 
+    CheckValidation checkValidation=new CheckValidation();
     public DutyServiceImpl(Session session) {
         this.session = session;
-        transaction=session.getTransaction();
+
         dutyRepository=new DutyRepositoryImpl(session);
     }
-
-    @Override
-    public Duty save(Duty duty) {
+    public Duty addDuty(Duty duty) {
+         Transaction transaction=session.getTransaction();
+         if (!checkValidation.isValid(duty)){return new Duty();}
         try {
             transaction.begin();
             dutyRepository.save(duty);
@@ -31,15 +32,13 @@ public class DutyServiceImpl implements DutyService,DutyRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            dutyRepository.getSession().close();
-
         }
         return duty;
     }
 
-    @Override
+
     public Duty update(Duty duty) {
+        Transaction transaction=session.getTransaction();
         try {
             transaction.begin();
             dutyRepository.update(duty);
@@ -55,8 +54,9 @@ public class DutyServiceImpl implements DutyService,DutyRepository {
         return duty;
     }
 
-    @Override
+
     public Duty remove(Duty duty) {
+        Transaction transaction=session.getTransaction();
         try {
             transaction.begin();
             dutyRepository.remove(duty);
@@ -72,18 +72,12 @@ public class DutyServiceImpl implements DutyService,DutyRepository {
         return duty;
     }
 
-    @Override
     public Collection<Duty> load() {
         return dutyRepository.load();
     }
 
-    @Override
     public Optional<Duty> findById(Long id) {
         return dutyRepository.findById(id);
     }
 
-    @Override
-    public Session getSession() {
-        return session;
-    }
 }
