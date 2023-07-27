@@ -46,7 +46,15 @@ try {
     }
 
     @Override
-    public Optional<Customer> findByUsernameAndPassword(Customer customer) {
-        return Optional.empty();
+    public Optional<Customer> findByEmailAndPassword(String email,String password) {
+        String hql="select c from Customer c where c.email=:email and c.password=:password";
+        try {
+            return Optional.ofNullable(session.createQuery(hql, Customer.class)
+                    .setParameter("email", email)
+                    .setParameter("password", password)
+                    .getSingleResult());
+        }catch (NoResultException e){
+            return Optional.empty();
+        }
     }
 }

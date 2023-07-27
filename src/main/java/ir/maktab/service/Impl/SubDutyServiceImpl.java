@@ -1,6 +1,7 @@
 package ir.maktab.service.Impl;
 
 
+import ir.maktab.entity.Duty;
 import ir.maktab.entity.SubDuty;
 import ir.maktab.repository.Impl.SubDutyRepositoryImpl;
 import ir.maktab.repository.SubDutyRepository;
@@ -12,6 +13,7 @@ import org.hibernate.TransactionException;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 public class SubDutyServiceImpl implements SubDutyService {
 private Session session;
@@ -35,6 +37,11 @@ CheckValidation checkValidation=new CheckValidation();
             }
         }
         return subDuty;
+    }
+
+    @Override
+    public Collection<SubDuty> showAllSubDutyOfDuty(Duty duty) {
+        return subDutyRepository.showSubDutyOfDuty(duty);
     }
 
 

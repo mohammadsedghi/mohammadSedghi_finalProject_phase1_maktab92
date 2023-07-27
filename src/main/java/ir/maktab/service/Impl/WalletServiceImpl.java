@@ -12,7 +12,7 @@ import org.hibernate.TransactionException;
 import java.util.Collection;
 import java.util.Optional;
 
-public class WalletServiceImpl  implements WalletService,WalletRepository{
+public class WalletServiceImpl  implements WalletService{
     private Session session;
     private Transaction transaction;
     private WalletRepository walletRepository;
@@ -23,23 +23,10 @@ public class WalletServiceImpl  implements WalletService,WalletRepository{
         walletRepository=new WalletRepositoryImpl(session);
     }
 
-    @Override
-    public Wallet save(Wallet wallet) {
-        try {
-           transaction.begin();
-            walletRepository.save(wallet);
-            transaction.commit();
-        } catch (TransactionException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } //finally {
-//            walletRepository.getSession().close();
-//        }
-        return wallet;
-    }
 
-    @Override
+
+
+
     public Wallet update(Wallet wallet) {
         try {
             transaction.begin();
@@ -55,7 +42,7 @@ public class WalletServiceImpl  implements WalletService,WalletRepository{
         return wallet;
     }
 
-    @Override
+
     public Wallet remove(Wallet wallet) {
         try {
             transaction.begin();
@@ -71,18 +58,43 @@ public class WalletServiceImpl  implements WalletService,WalletRepository{
         return wallet;
     }
 
-    @Override
+
     public Collection<Wallet> load() {
         return walletRepository.load();
     }
 
-    @Override
+
     public Optional<Wallet> findById(Long id) {
         return walletRepository.findById(id);
     }
 
-    @Override
+
     public Session getSession() {
         return session;
+    }
+
+
+    public Wallet createWallet() {
+        Wallet wallet=new Wallet(0d);
+        try {
+            transaction.begin();
+            walletRepository.save(wallet);
+            transaction.commit();
+        } catch (TransactionException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return wallet;
+    }
+
+    @Override
+    public Double payByWallet(Double cost) {
+        return null;
+    }
+
+    @Override
+    public Double payByPaymentGateway(Double cost) {
+        return null;
     }
 }

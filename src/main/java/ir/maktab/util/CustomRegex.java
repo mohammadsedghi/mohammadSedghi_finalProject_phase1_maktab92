@@ -1,12 +1,16 @@
 package ir.maktab.util;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+@Setter
+@Getter
 public class CustomRegex {
     String validStr="^[a-zA-Z]+$";
     String validDigit="^\\d+$";
-    String ValidDigitStr="^[a-zA-Z0-9]+$";
+    String validDigitStr="^[a-zA-Z0-9]+$";
     String validPositiveDigit="^[+]?\\d+([.]\\d+)?$";
     String validEmptyStr="(^$|^.*@.*\\..*$)";
     String validEmail="^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$";

@@ -7,6 +7,7 @@ import ir.maktab.repository.SpecialistRepository;
 import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public class SpecialistRepositoryImpl extends BaseRepositoryImpl<Specialist,Long>
@@ -42,5 +43,26 @@ public class SpecialistRepositoryImpl extends BaseRepositoryImpl<Specialist,Long
         }
     }
 
+    @Override
+    public Optional<Specialist> findByEmailAndPassword(String email, String password) {
+        String hql="select c from Specialist c where c.email=:email and c.password=:password";
+        try {
+            return Optional.ofNullable(session.createQuery(hql, Specialist.class)
+                    .setParameter("email", email)
+                    .setParameter("password", password)
+                    .getSingleResult());
+        }catch (NoResultException e){
+            return Optional.empty();
+        }
+    }
 
-}
+    @Override
+    public Collection<Specialist> showUnConfirmSpecialist() {
+        String hql="select c from Specialist c where c.status=:NEW_SPECIALIST";
+            return session.createQuery(hql, Specialist.class).getResultList();
+
+
+        }
+    }
+
+

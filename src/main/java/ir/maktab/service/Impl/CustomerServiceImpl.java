@@ -7,6 +7,7 @@ import ir.maktab.repository.Impl.CustomerRepositoryImpl;
 import ir.maktab.service.CustomerService;
 import ir.maktab.util.CheckValidation;
 
+import ir.maktab.util.CustomException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
@@ -57,6 +58,21 @@ CheckValidation checkValidation=new CheckValidation();
         }
         return customer;
     }
+
+    @Override
+    public Optional<Customer> loginByEmailAndPassword(String email, String password) {
+      if(checkValidation.isValidEmail(email)&&checkValidation.isValidPassword(password)) {
+      customerRepository.findByEmailAndPassword(email,password).ifPresentOrElse(
+              customer->{
+                  CheckValidation.memberTypeCustomer=customer;
+              }
+              ,()-> System.out.println("user not found")
+      );
+      }
+
+        return Optional.empty();
+    }
+
     public Customer removeCustomer(Customer customer) {
         Transaction transaction = session.getTransaction();
         try {
