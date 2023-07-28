@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-@ToString
+//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -27,5 +27,13 @@ public class Duty extends BaseEntity<Long> {
 
     public Duty(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Duty{" +
+                "name='" + name + '\'' +
+                ", subDuties=" + subDuties +
+                "} " ;
     }
 }

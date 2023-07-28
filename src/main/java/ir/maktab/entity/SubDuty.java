@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 
 @Setter
 @Getter
-@ToString
+//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -29,4 +29,13 @@ public class SubDuty extends BaseEntity<Long> {
     @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
     @Length(message ="lastName must be 100 character",max = 100)
     String description;
+
+    @Override
+    public String toString() {
+        return "SubDuty{" +
+                ", name='" + name + '\'' +
+                ", basePrice=" + basePrice +
+                ", description='" + description + '\'' +
+                "} " ;
+    }
 }

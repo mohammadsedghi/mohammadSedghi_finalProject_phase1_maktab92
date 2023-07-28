@@ -10,6 +10,7 @@ import ir.maktab.repository.SpecialistRepository;
 import ir.maktab.service.SpecialistService;
 import ir.maktab.util.CheckValidation;
 import ir.maktab.util.CustomException;
+import ir.maktab.util.CustomNoResultException;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -23,13 +24,14 @@ public class SpecialistServiceImpl  implements SpecialistService {
     private Session session;
      SpecialistRepository specialistRepository;
     CheckValidation checkValidation=new CheckValidation();
-    Transaction transaction = session.getTransaction();
+
 
     public SpecialistServiceImpl(Session session) {
         this.session = session;
         specialistRepository=new SpecialistRepositoryImpl(session);
     }
     public Specialist update(Specialist specialist) {
+        Transaction transaction = session.getTransaction();
         try {
             transaction.begin();
             specialistRepository.update(specialist);
@@ -42,6 +44,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
         return specialist;
     }
     public Specialist remove(Specialist specialist) {
+        Transaction transaction = session.getTransaction();
         try {
             transaction.begin();
             specialistRepository.remove(specialist);
@@ -68,6 +71,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
 
     @Override
     public Specialist addSpecialist(Specialist specialist) {
+        Transaction transaction = session.getTransaction();
         if (!checkValidation.isValid(specialist)) return new Specialist();
         specialistRepository.findByEmail(specialist.getEmail()).ifPresentOrElse(
                 tempCustomer -> {
@@ -169,6 +173,27 @@ public class SpecialistServiceImpl  implements SpecialistService {
         return false;
         }
 
+    @Override
+    public boolean changePassword(String email,String oldPassword,String newPassword) {
+       if(checkValidation.isValidEmail(email)&&checkValidation.isValidPassword(oldPassword)) {
+           if (checkValidation.isValidPassword(newPassword)) {
+               specialistRepository.findByEmailAndPassword(email, oldPassword).ifPresentOrElse(
+                       specialist -> {
+                           specialist.setPassword(newPassword);
+                           specialistRepository.update(specialist);
+                       }, () -> {
+                           throw new CustomNoResultException("this user is not found");
+                       }
+               );
+           } else {
+               throw new CustomNoResultException("new password is invalid");
+           }
+       }else {
+           throw new CustomNoResultException("email and old password is invalid");
+       }
+
+        return true;
+    }
 
 
 }

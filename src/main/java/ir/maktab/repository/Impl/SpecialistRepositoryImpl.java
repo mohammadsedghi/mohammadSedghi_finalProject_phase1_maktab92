@@ -3,6 +3,7 @@ package ir.maktab.repository.Impl;
 import ir.maktab.base.repository.BaseRepositoryImpl;
 import ir.maktab.entity.Customer;
 import ir.maktab.entity.Specialist;
+import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
 import ir.maktab.repository.SpecialistRepository;
 import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
@@ -59,10 +60,15 @@ public class SpecialistRepositoryImpl extends BaseRepositoryImpl<Specialist,Long
     @Override
     public Collection<Specialist> showUnConfirmSpecialist() {
         String hql="select c from Specialist c where c.status=:NEW_SPECIALIST";
-            return session.createQuery(hql, Specialist.class).getResultList();
+        SpecialistRegisterStatus status=SpecialistRegisterStatus.NEW_SPECIALIST;
+            return session.createQuery(hql, Specialist.class)
+                    .setParameter("NEW_SPECIALIST",status)
+                    .getResultList();
 
 
         }
-    }
+
+
+}
 
 

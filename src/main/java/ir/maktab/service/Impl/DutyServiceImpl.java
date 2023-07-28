@@ -47,9 +47,6 @@ public class DutyServiceImpl implements DutyService {
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            dutyRepository.getSession().close();
-
         }
         return duty;
     }
@@ -65,10 +62,8 @@ public class DutyServiceImpl implements DutyService {
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            dutyRepository.getSession().close();
-
         }
+
         return duty;
     }
 

@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-@ToString
+//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -34,7 +34,24 @@ public class Specialist extends Person {
     Integer score;
     @Column(name = "image_data", columnDefinition = "TEXT")
    String imageData;
-@Builder
+
+    @Override
+    public String toString() {
+        return "Specialist{" +
+                "subDuties=" + subDuties +
+                ", wallet=" + wallet +
+                ", score=" + score +
+                ", firstName='" + firstName + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", nationalId='" + nationalId + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", registerDate=" + registerDate +
+                ", registerTime=" + registerTime +
+                "} " ;
+    }
+
+    @Builder
     public Specialist(@NotNull(message = "this field must be have value")
                       @Length(message = "firstName must be 100 character", max = 100)
                       @Pattern(message = "province must be just letters", regexp = "^[a-zA-Z]+$") String firstName,
@@ -57,5 +74,6 @@ public class Specialist extends Person {
         this.status = status;
         this.score = score;
         this.imageData = imageData;
+
     }
 }

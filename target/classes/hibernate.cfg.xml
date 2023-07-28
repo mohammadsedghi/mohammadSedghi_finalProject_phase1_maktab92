@@ -8,7 +8,7 @@
         <property name="hibernate.connection.password">12345</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/house_services</property>
         <property name="connection_pool_size">1</property>
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">update</property>
         <property name="show_sql">true</property>
         <mapping class="ir.maktab.entity.Address"/>
         <mapping class="ir.maktab.entity.Customer"/>
