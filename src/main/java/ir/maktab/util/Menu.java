@@ -335,9 +335,8 @@ public class Menu {
 
     public void showMenuForSpecialist() {
         System.out.println("1)login");
-        System.out.println("change password");
+        System.out.println("2)change password");
         System.out.println("----");
-        runSpecialistMenu();
     }
 
     public void runSpecialistMenu() {
@@ -353,6 +352,13 @@ public class Menu {
                     System.out.println("new password:");
                     String newPassword = scanner.next();
                     specialistService.changePassword(email, oldPassword, newPassword);
+                }
+                default -> {
+                    try {
+                        throw new CustomNoResultException("you enter wrong number or user not found try again or signup");
+                    } catch (CustomNoResultException c) {
+                        System.out.println(c.getMessage());
+                    }
                 }
             }
         }

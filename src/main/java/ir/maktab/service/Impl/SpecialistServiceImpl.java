@@ -175,24 +175,36 @@ public class SpecialistServiceImpl  implements SpecialistService {
 
     @Override
     public boolean changePassword(String email,String oldPassword,String newPassword) {
-       if(checkValidation.isValidEmail(email)&&checkValidation.isValidPassword(oldPassword)) {
-           if (checkValidation.isValidPassword(newPassword)) {
-               specialistRepository.findByEmailAndPassword(email, oldPassword).ifPresentOrElse(
-                       specialist -> {
-                           specialist.setPassword(newPassword);
-                           specialistRepository.update(specialist);
-                       }, () -> {
-                           throw new CustomNoResultException("this user is not found");
-                       }
-               );
-           } else {
-               throw new CustomNoResultException("new password is invalid");
-           }
-       }else {
-           throw new CustomNoResultException("email and old password is invalid");
-       }
-
+        Transaction transaction=session.getTransaction();
+        try {
+            if (checkValidation.isValidEmail(email) && checkValidation.isValidPassword(oldPassword)) {
+                if (checkValidation.isValidPassword(newPassword)) {
+                    specialistRepository.findByEmailAndPassword(email, oldPassword).ifPresentOrElse(
+                            specialist -> {
+                                specialist.setPassword(newPassword);
+                                try {
+                                    transaction.begin();
+                                    specialistRepository.update(specialist);
+                                    transaction.commit();
+                                }catch (TransactionException t){
+                                    transaction.rollback();
+                                }
+                            }, () -> {
+                                throw new CustomNoResultException("this user is not found");
+                            }
+                    );
+                } else {
+                    throw new CustomNoResultException("new password is invalid");
+                }
+            } else {
+                throw new CustomNoResultException("email and old password is invalid");
+            }
+        }catch (CustomNoResultException c){
+            System.out.println(c.getMessage());
+            return false;
+        }
         return true;
+
     }
 
 
