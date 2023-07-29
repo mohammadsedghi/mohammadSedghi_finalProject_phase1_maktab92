@@ -3,7 +3,7 @@ import ir.maktab.entity.Duty;
 import ir.maktab.repository.DutyRepository;
 import ir.maktab.repository.Impl.DutyRepositoryImpl;
 import ir.maktab.service.DutyService;
-import ir.maktab.util.CheckValidation;
+import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
@@ -74,5 +74,7 @@ public class DutyServiceImpl implements DutyService {
     public Optional<Duty> findById(Long id) {
         return dutyRepository.findById(id);
     }
+
+
 
 }

@@ -1,4 +1,4 @@
-package ir.maktab.util;
+package ir.maktab.util.validation;
 
 import ir.maktab.entity.Customer;
 import ir.maktab.entity.Specialist;
@@ -72,5 +72,8 @@ public class CheckValidation {
     }
 
 
+    public boolean isImageHaveValidSize(byte[] bytes) {
+        return bytes.length <= 300000;
+    }
 
 }

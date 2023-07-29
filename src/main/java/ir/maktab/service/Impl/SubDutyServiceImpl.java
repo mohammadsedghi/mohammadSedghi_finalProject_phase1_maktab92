@@ -6,14 +6,13 @@ import ir.maktab.entity.SubDuty;
 import ir.maktab.repository.Impl.SubDutyRepositoryImpl;
 import ir.maktab.repository.SubDutyRepository;
 import ir.maktab.service.SubDutyService;
-import ir.maktab.util.CheckValidation;
+import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 public class SubDutyServiceImpl implements SubDutyService {
 private Session session;
@@ -86,4 +85,34 @@ CheckValidation checkValidation=new CheckValidation();
         return subDutyRepository.findById(id);
     }
 
+    @Override
+    public boolean editSubDutyPrice(SubDuty subduty, Double price) {
+        Transaction transaction= session.getTransaction();
+        subduty.setBasePrice(price);
+        try {
+            transaction.begin();
+            subDutyRepository.update(subduty);
+            transaction.commit();
+            return true;
+        }catch (TransactionException t){
+            System.out.println(t.getMessage());
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean editSubDutyDescription(SubDuty subduty, String description) {
+        Transaction transaction= session.getTransaction();
+        subduty.setDescription(description);
+        try {
+            transaction.begin();
+            subDutyRepository.update(subduty);
+            transaction.commit();
+            return true;
+        }catch (TransactionException t){
+            System.out.println(t.getMessage());
+        }
+        return false;
+    }
 }

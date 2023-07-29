@@ -1,4 +1,4 @@
-package ir.maktab.util;
+package ir.maktab.util.validation;
 
 import lombok.Getter;
 import lombok.Setter;

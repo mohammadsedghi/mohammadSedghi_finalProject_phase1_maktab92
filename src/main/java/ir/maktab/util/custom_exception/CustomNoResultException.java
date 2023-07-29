@@ -1,4 +1,4 @@
-package ir.maktab.util;
+package ir.maktab.util.custom_exception;
 
 import jakarta.persistence.NoResultException;
 

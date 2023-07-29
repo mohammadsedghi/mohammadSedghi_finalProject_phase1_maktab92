@@ -76,15 +76,14 @@ public class WalletServiceImpl  implements WalletService{
 
     public Wallet createWallet() {
         Wallet wallet=new Wallet(0d);
-        try {
-            transaction.begin();
+//        try {
             walletRepository.save(wallet);
-            transaction.commit();
-        } catch (TransactionException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        }
+
+//        } catch (TransactionException e) {
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//        }
         return wallet;
     }
 

@@ -10,4 +10,6 @@ public interface CustomerService  {
     Customer removeCustomer(Customer customer);
     Customer updateCustomer(Customer customer);
    Optional<Customer> loginByEmailAndPassword(String email,String password);
+    boolean changePassword(String email,String oldPassword,String newPassword);
+    String encryptCustomerPassword(String password);
 }

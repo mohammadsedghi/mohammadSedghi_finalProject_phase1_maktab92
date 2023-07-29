@@ -7,6 +7,8 @@ import ir.maktab.entity.Specialist;
 import ir.maktab.entity.SubDuty;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
 import ir.maktab.service.Impl.*;
+import ir.maktab.util.custom_exception.CustomNoResultException;
+import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -37,13 +39,14 @@ public class Menu {
 
     public void logIn() {
         System.out.println("=========login==========");
+        System.out.println("inter type: 1)admin   2)customer   or 3)specialist");
+         int type=scanner.nextInt();
         System.out.println("email: ");
         String email = scanner.next();
         System.out.println("password: ");
         String password = scanner.next();
-        System.out.println("inter type: 1)admin   2)customer   or 3)specialist");
         System.out.println("-----------------------------------------------");
-       switch (scanner.nextInt()) {
+       switch (type) {
 
                case 1:
                    if (email.equals("a") && password.equals("a")) {
@@ -56,7 +59,7 @@ public class Menu {
                    break;
                case 3:
                    specialistService.loginByEmailAndPassword(email, password);
-                   runSpecialistMenu();
+
                default:
                    try {
                    throw new CustomNoResultException("you enter wrong number or user not found try again or signup");
@@ -291,22 +294,20 @@ public class Menu {
         ) {
             System.out.println(duty1);
             System.out.println("1)selected 2)anotherDuty");
-            if (scanner.nextInt() == 1) {
-                candidateduty = duty1;
-                break;
-            } else if (scanner.nextInt() == 2) {
-                System.out.println();
+            switch (scanner.nextInt()) {
+                case 1 -> candidateduty = duty1;
+                case 2 -> System.out.println();
             }
         }
         Set<SubDuty> subDuties = new HashSet<>(subDutyService.showAllSubDutyOfDuty(candidateduty));
         Set<SubDuty> candidateSetOfSubDuties = new HashSet<>();
         for (SubDuty subDuty : subDuties) {
             System.out.println(subDuty);
-            System.out.println("1)selected 2)anotherSubDuty");
-            if (scanner.nextInt() == 1) {
-                candidateSetOfSubDuties.add(subDuty);
-            } else if (scanner.nextInt() == 2) {
-                System.out.println();
+            System.out.println("1)selected 2)anotherSubDuty or press any number");
+            switch (scanner.nextInt()) {
+                case 1 -> candidateSetOfSubDuties.add(subDuty);
+                case 2 -> System.out.println();
+                default -> System.out.println("");
             }
         }
         try {
@@ -318,7 +319,7 @@ public class Menu {
                     .password(password)
                     .registerDate(LocalDate.now())
                     .registerTime(LocalTime.now())
-                    .status(SpecialistRegisterStatus.NEW_SPECIALIST)
+                    .status(SpecialistRegisterStatus.WAITING_FOR_CONFIRM)
                     .subDuties(candidateSetOfSubDuties)
                     .wallet(walletService.createWallet())
                     .score(0)
@@ -328,7 +329,7 @@ public class Menu {
             System.out.println("------------------------------");
             System.out.println("please wait until admin confirm you");
         } catch (IOException e) {
-            //TODO SOMETHING
+            System.out.println(e.getMessage());
         }
         logIn();
     }
@@ -336,11 +337,13 @@ public class Menu {
     public void showMenuForSpecialist() {
         System.out.println("1)login");
         System.out.println("2)change password");
-        System.out.println("----");
+        System.out.println("3)showImage");
     }
 
     public void runSpecialistMenu() {
-        while (true) {
+        boolean flag=true;
+
+        while (flag) {
             showMenuForSpecialist();
             switch (scanner.nextInt()) {
                 case 1 -> logIn();
@@ -353,6 +356,7 @@ public class Menu {
                     String newPassword = scanner.next();
                     specialistService.changePassword(email, oldPassword, newPassword);
                 }
+                case 3->{specialistService.convertByteArrayToImage(CheckValidation.memberTypespecialist,"t.jpg");}
                 default -> {
                     try {
                         throw new CustomNoResultException("you enter wrong number or user not found try again or signup");
@@ -386,12 +390,13 @@ public class Menu {
                 .wallet(walletService.createWallet())
                 .build();
         customerService.addCustomer(customer);
+
         logIn();
     }
 
     public void customerMenu() {
         System.out.println("1)login");
-        System.out.println("---");
+        System.out.println("signup");
         System.out.println("----");
         runCustomerMenu();
     }
@@ -404,7 +409,9 @@ public class Menu {
                 case 1:
                     logIn();
                     break;
-
+                case 2:
+                    customerSignup();
+                    break;
             }
         }
     }

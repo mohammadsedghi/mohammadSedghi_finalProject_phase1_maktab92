@@ -44,8 +44,6 @@ public class Specialist extends Person {
                 ", firstName='" + firstName + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", nationalId='" + nationalId + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", registerDate=" + registerDate +
                 ", registerTime=" + registerTime +
                 "} " ;

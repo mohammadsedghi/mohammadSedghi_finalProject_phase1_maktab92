@@ -59,10 +59,10 @@ public class SpecialistRepositoryImpl extends BaseRepositoryImpl<Specialist,Long
 
     @Override
     public Collection<Specialist> showUnConfirmSpecialist() {
-        String hql="select c from Specialist c where c.status=:NEW_SPECIALIST";
-        SpecialistRegisterStatus status=SpecialistRegisterStatus.NEW_SPECIALIST;
+        String hql="select c from Specialist c where c.status=:waitingForConfirm";
+        SpecialistRegisterStatus status=SpecialistRegisterStatus.WAITING_FOR_CONFIRM;
             return session.createQuery(hql, Specialist.class)
-                    .setParameter("NEW_SPECIALIST",status)
+                    .setParameter("waitingForConfirm",status)
                     .getResultList();
 
 

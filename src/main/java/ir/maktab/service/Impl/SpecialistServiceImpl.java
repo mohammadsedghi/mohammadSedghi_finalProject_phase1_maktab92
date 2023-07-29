@@ -4,13 +4,16 @@ package ir.maktab.service.Impl;
 
 import ir.maktab.entity.Specialist;
 import ir.maktab.entity.SubDuty;
+import ir.maktab.entity.Wallet;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
 import ir.maktab.repository.Impl.SpecialistRepositoryImpl;
 import ir.maktab.repository.SpecialistRepository;
 import ir.maktab.service.SpecialistService;
-import ir.maktab.util.CheckValidation;
-import ir.maktab.util.CustomException;
-import ir.maktab.util.CustomNoResultException;
+import ir.maktab.util.Menu;
+import ir.maktab.util.hash_password.EncryptPassword;
+import ir.maktab.util.validation.CheckValidation;
+import ir.maktab.util.custom_exception.CustomException;
+import ir.maktab.util.custom_exception.CustomNoResultException;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -24,7 +27,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
     private Session session;
      SpecialistRepository specialistRepository;
     CheckValidation checkValidation=new CheckValidation();
-
+//WalletServiceImpl walletService=new WalletServiceImpl(session);
 
     public SpecialistServiceImpl(Session session) {
         this.session = session;
@@ -71,37 +74,52 @@ public class SpecialistServiceImpl  implements SpecialistService {
 
     @Override
     public Specialist addSpecialist(Specialist specialist) {
-        Transaction transaction = session.getTransaction();
-        if (!checkValidation.isValid(specialist)) return new Specialist();
-        specialistRepository.findByEmail(specialist.getEmail()).ifPresentOrElse(
-                tempCustomer -> {
-                }, () -> {
-                    try {
-                        transaction.begin();
-                        specialistRepository.save(specialist);
-                        transaction.commit();
-                    } catch (TransactionException e) {
-                        System.out.println(e);
-                        transaction.rollback();
-
-                    }
-                });
+        try {
+            Transaction transaction = session.getTransaction();
+            if (!checkValidation.isValid(specialist))throw new CustomException("input  is invalid  ");
+            specialistRepository.findByEmail(specialist.getEmail()).ifPresentOrElse(
+                    tempCustomer -> {throw new CustomException("Specialist with this email and password is exist ");
+                    }, () -> {
+                        try {
+                            transaction.begin();
+                            specialist.setPassword(encryptSpecialistPassword(specialist.getPassword()));
+                            specialistRepository.save(specialist);
+                            transaction.commit();
+                        } catch (TransactionException e) {
+                            System.out.println(e.getMessage());
+                            transaction.rollback();
+                        }
+                    });
+        }catch (CustomNoResultException c){
+            System.out.println(c.getMessage());
+        }
         return specialist;
     }
 
     @Override
     public Optional<Specialist> loginByEmailAndPassword(String email, String password) {
-        if(checkValidation.isValidEmail(email)&&checkValidation.isValidPassword(password)) {
-            specialistRepository.findByEmailAndPassword(email,password).ifPresentOrElse(
-                    specialist->{
-                        CheckValidation.memberTypespecialist=specialist;
-                    }
-                    ,()-> System.out.println("user not found")
-            );
+        Menu menu=new Menu();
+        try {
+            if (checkValidation.isValidEmail(email) && checkValidation.isValidPassword(password)) {
+                specialistRepository.findByEmailAndPassword(email, encryptSpecialistPassword(password)).ifPresentOrElse(
+                        specialist -> {
+                            CheckValidation.memberTypespecialist = specialist;
+
+                                if (CheckValidation.memberTypespecialist.getStatus()==SpecialistRegisterStatus.WAITING_FOR_CONFIRM){
+                                    throw new CustomNoResultException("you cannot access before admin confirmed you");
+                                }else menu.runSpecialistMenu();
+                        }
+                        , () -> {
+                            throw new CustomNoResultException("Specialist not found");
+                        }
+                );
+            }
+        }catch (CustomNoResultException c) {
+            CheckValidation.memberTypespecialist =new Specialist();
+            System.out.println(c.getMessage());
+            menu.firstMenu();
         }
-
         return Optional.empty();
-
     }
 
     @Override
@@ -135,26 +153,29 @@ public class SpecialistServiceImpl  implements SpecialistService {
     public String convertImageToImageData(String imagePath)throws IOException {
     try {
         byte[] fileContent = FileUtils.readFileToByteArray(new File(imagePath));
-        checkValidation.isJpgImage(fileContent);
+    if (!checkValidation.isJpgImage(fileContent))throw new CustomException("image file format is not valid");
+   if(!checkValidation.isImageHaveValidSize(fileContent)){throw new CustomException("image size must be lower than 300KB");}
         String encodedString = Base64.getEncoder().encodeToString(fileContent);
         return encodedString;
-    } catch (IOException e) {
+    } catch (IOException |CustomException e) {
         e.printStackTrace();
     }
     return null;
 }
-    public  void convertByteArrayToImage(Specialist specialist) throws IOException {
-        Optional<Specialist> SpecialistId = specialistRepository.findById(specialist.getId());
-       SpecialistId.ifPresentOrElse(member->{
-           byte[] imageData = Base64.getDecoder().decode(member.getImageData());
-           String newFilePath = "t.jpg";
-           try (FileOutputStream fileOutputStream = new FileOutputStream(newFilePath)) {
-               fileOutputStream.write(imageData);
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-       }, Specialist::new
-           );
+    public  void convertByteArrayToImage(Specialist specialist,String newFilePath ){
+        //String newFilePath = "t.jpg";
+
+            Optional<Specialist> SpecialistId = specialistRepository.findById(specialist.getId());
+            SpecialistId.ifPresentOrElse(member -> {
+                        byte[] imageData = Base64.getDecoder().decode(member.getImageData());
+                        try (FileOutputStream fileOutputStream = new FileOutputStream(newFilePath)) {
+                            fileOutputStream.write(imageData);
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }, Specialist::new
+            );
+
     }
     @Override
     public Boolean addSpecialistToSubDuty(Specialist specialist,SubDuty subDuty) {
@@ -179,9 +200,9 @@ public class SpecialistServiceImpl  implements SpecialistService {
         try {
             if (checkValidation.isValidEmail(email) && checkValidation.isValidPassword(oldPassword)) {
                 if (checkValidation.isValidPassword(newPassword)) {
-                    specialistRepository.findByEmailAndPassword(email, oldPassword).ifPresentOrElse(
+                    specialistRepository.findByEmailAndPassword(email, encryptSpecialistPassword(oldPassword)).ifPresentOrElse(
                             specialist -> {
-                                specialist.setPassword(newPassword);
+                                specialist.setPassword(encryptSpecialistPassword(newPassword));
                                 try {
                                     transaction.begin();
                                     specialistRepository.update(specialist);
@@ -205,6 +226,12 @@ public class SpecialistServiceImpl  implements SpecialistService {
         }
         return true;
 
+    }
+
+    @Override
+    public String encryptSpecialistPassword(String password) {
+        EncryptPassword encryptPassword=new EncryptPassword();
+        return encryptPassword.hashPassword(password);
     }
 
 
