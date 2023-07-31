@@ -17,8 +17,7 @@ public class CustomerComments extends BaseEntity<Long> {
 
     @OneToOne
     Orders orders;
-    @ManyToOne
-    Customer customer;
+  String description;
     @NotNull(message = "this field must be have value")
     Integer score;
 }

@@ -339,6 +339,7 @@ public class Menu {
     }
 
     public void setSpecialistSuggestion() {
+        CalenderAndValidation calenderAndValidation=new CalenderAndValidation();
         Set<SubDuty> specialistSubDuties = new HashSet<>(CheckValidation.memberTypespecialist.getSubDuties());
         for (SubDuty subDuty : specialistSubDuties
         ) {
@@ -360,12 +361,16 @@ public class Menu {
                                     double proposedPrice = scanner.nextDouble();
                                     System.out.println("inter workTime PerHour");
                                     Integer workTimePerHour = scanner.nextInt();
+                                  if (calenderAndValidation.setAndConvertTime(order.getTimeOfWork()).equals(order.getTimeOfWork())){
+                                      System.out.println("you entered wrong date");
+                                    break;
+                                  }
                                     SpecialistSuggestion specialistSuggestion = SpecialistSuggestion.builder()
                                             .specialist(CheckValidation.memberTypespecialist)
                                             .order(orderService.updateOrderToNextLevel(order, OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SELECTION))
                                             .DateOfSuggestion(LocalDate.now())
                                             .TimeOfSuggestion(LocalTime.now())
-                                            .TimeOfStartWork(LocalTime.now())
+                                            .TimeOfStartWork(calenderAndValidation.setAndConvertTime(order.getTimeOfWork()))
                                             .durationOfWorkPerHour(workTimePerHour)
                                             .proposedPrice(subDuty.getBasePrice() + proposedPrice)
                                             .build();
@@ -510,7 +515,7 @@ public class Menu {
                                         .description(description)
                                         .address(addressService.createAddress(address))
                                         .DateOfWork(LocalDate.now())
-                                        .timeOfWork(LocalDateTime.now())
+                                        .timeOfWork(LocalTime.now())
                                         .proposedPrice(subDuty.getBasePrice() + proposedPrice)
                                         .orderStatus(OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION)
                                         .build();

@@ -9,6 +9,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Setter
 @Getter
 @ToString
@@ -31,7 +33,7 @@ public class Orders extends BaseEntity<Long> {
     @NotNull(message = "this field must be have value")
     LocalDate DateOfWork;
     @NotNull(message = "this field must be have value")
-    LocalDateTime timeOfWork;
+    LocalTime timeOfWork;
 //    @NotNull(message = "this field must be have value")
     @OneToOne
     Address address;

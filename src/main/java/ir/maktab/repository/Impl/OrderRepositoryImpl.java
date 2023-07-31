@@ -2,14 +2,12 @@ package ir.maktab.repository.Impl;
 
 import ir.maktab.base.repository.BaseRepositoryImpl;
 import ir.maktab.entity.Orders;
-import ir.maktab.entity.Specialist;
 import ir.maktab.entity.SubDuty;
 import ir.maktab.entity.enumeration.OrderStatus;
 import ir.maktab.repository.OrderRepository;
 import org.hibernate.Session;
-
 import java.util.Collection;
-import java.util.Set;
+
 
 public class OrderRepositoryImpl extends BaseRepositoryImpl<Orders,Long>
         implements OrderRepository {
