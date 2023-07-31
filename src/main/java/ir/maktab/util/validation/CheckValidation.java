@@ -1,5 +1,6 @@
 package ir.maktab.util.validation;
 
+import ir.maktab.entity.Admin;
 import ir.maktab.entity.Customer;
 import ir.maktab.entity.Specialist;
 import ir.maktab.util.custom_exception.CustomException;
@@ -20,6 +21,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 public class CheckValidation {
     public static Customer memberTypeCustomer;
     public static Specialist memberTypespecialist;
+    public static Admin memberTypeAdmin;
     CustomRegex customRegex = new CustomRegex();
 
     public <T> boolean isValid(T object) {

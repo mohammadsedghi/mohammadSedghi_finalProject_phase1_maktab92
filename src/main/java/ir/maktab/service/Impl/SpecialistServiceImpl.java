@@ -26,7 +26,6 @@ public class SpecialistServiceImpl  implements SpecialistService {
     private final Session session;
      SpecialistRepository specialistRepository;
     CheckValidation checkValidation=new CheckValidation();
-//WalletServiceImpl walletService=new WalletServiceImpl(session);
 
     public SpecialistServiceImpl(Session session) {
         this.session = session;
