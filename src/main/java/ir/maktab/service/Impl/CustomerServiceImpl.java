@@ -10,7 +10,6 @@ import ir.maktab.util.custom_exception.CustomException;
 import ir.maktab.util.custom_exception.CustomNoResultException;
 import ir.maktab.util.hash_password.EncryptPassword;
 import ir.maktab.util.validation.CheckValidation;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
@@ -21,8 +20,8 @@ import java.util.Optional;
 
 
 public class CustomerServiceImpl implements CustomerService {
-    private CustomerRepository customerRepository;
-    private Session session;
+    private final CustomerRepository customerRepository;
+    private final Session session;
 CheckValidation checkValidation=new CheckValidation();
 
     public CustomerServiceImpl(Session session) {
@@ -30,6 +29,8 @@ CheckValidation checkValidation=new CheckValidation();
         customerRepository = new CustomerRepositoryImpl(session);
     }
     public Customer addCustomer(Customer customer) {
+        Menu menu=new Menu();
+        try{
         if (!checkValidation.isValid(customer)) throw new CustomException("input is invalid ");
         Transaction transaction = session.getTransaction();
         customerRepository.findByEmail(customer.getEmail()).ifPresentOrElse(
@@ -42,12 +43,17 @@ CheckValidation checkValidation=new CheckValidation();
                         customerRepository.save(customer);
                         transaction.commit();
                     } catch (TransactionException e) {
-                        System.out.println(e);
+                        System.out.println(e.getMessage());
                         transaction.rollback();
 
                     }
                 });
         return customer;
+    }catch (CustomException c){
+        System.out.println(c.getMessage());
+        menu.firstMenu();
+        return new Customer();
+        }
     }
     public Customer updateCustomer(Customer customer) {
         Transaction transaction = session.getTransaction();
@@ -57,9 +63,6 @@ CheckValidation checkValidation=new CheckValidation();
             transaction.commit();
         } catch (TransactionException e) {
             transaction.rollback();
-        } finally {
-            customerRepository.getSession().close();
-
         }
         return customer;
     }
@@ -77,7 +80,7 @@ CheckValidation checkValidation=new CheckValidation();
                         , () ->{throw new CustomNoResultException("customer not found");}
 
                 );
-            }
+            }else {throw new CustomNoResultException("you inter invalid input for login");}
          }catch (CustomNoResultException c) {
         CheckValidation.memberTypeCustomer =new Customer();
         System.out.println(c.getMessage());
@@ -93,12 +96,7 @@ CheckValidation checkValidation=new CheckValidation();
             customerRepository.remove(customer);
             transaction.commit();
         } catch (TransactionException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            customerRepository.getSession().close();
-
+            transaction.rollback();
         }
         return customer;
     }
@@ -149,5 +147,7 @@ CheckValidation checkValidation=new CheckValidation();
         EncryptPassword encryptPassword=new EncryptPassword();
         return encryptPassword.hashPassword(password);
     }
+
+
 
 }

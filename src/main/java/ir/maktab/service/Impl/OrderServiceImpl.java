@@ -2,19 +2,20 @@ package ir.maktab.service.Impl;
 
 
 import ir.maktab.entity.Orders;
+import ir.maktab.entity.SubDuty;
+import ir.maktab.entity.enumeration.OrderStatus;
 import ir.maktab.repository.Impl.OrderRepositoryImpl;
 import ir.maktab.repository.OrderRepository;
 import ir.maktab.service.OrderService;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
-
 import java.util.Collection;
 import java.util.Optional;
 
-public class OrderServiceImpl implements OrderService,OrderRepository {
+public class OrderServiceImpl implements OrderService {
 
-    private Session session;
+    private final Session session;
     private Transaction transaction;
 private OrderRepository orderRepository;
 
@@ -23,40 +24,13 @@ private OrderRepository orderRepository;
         transaction=session.getTransaction();
         orderRepository=new OrderRepositoryImpl(session);
     }
-
-    @Override
-    public Orders save(Orders orders) {
-        try {
-            transaction.begin();
-            orderRepository.save(orders);
-            transaction.commit();
-        } catch (TransactionException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            orderRepository.getSession().close();
-        }
+    public Orders updateOrderToNextLevel(Orders orders, OrderStatus orderStatus) {
+       orders.setOrderStatus(orderStatus);
+       orderRepository.update(orders);
         return orders;
     }
 
-    @Override
-    public Orders update(Orders orders) {
-        try {
-            transaction.begin();
-            orderRepository.update(orders);
-            transaction.commit();
-        } catch (TransactionException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            orderRepository.getSession().close();
-        }
-        return orders;
-    }
 
-    @Override
     public Orders remove(Orders orders) {
         try {
             transaction.begin();
@@ -66,24 +40,39 @@ private OrderRepository orderRepository;
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            orderRepository.getSession().close();
+        }
+        return orders;
+    }
+
+
+    public Collection<Orders> load() {
+        return orderRepository.load();
+    }
+
+
+    public Optional<Orders> findById(Long id) {
+        return orderRepository.findById(id) ;
+    }
+
+
+
+    @Override
+    public Orders submitOrder(Orders orders) {
+
+        try {
+            transaction.begin();
+            orderRepository.save(orders);
+            transaction.commit();
+        } catch (TransactionException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
         return orders;
     }
 
     @Override
-    public Collection<Orders> load() {
-        return orderRepository.load();
-    }
-
-    @Override
-    public Optional<Orders> findById(Long id) {
-        return orderRepository.findById(id) ;
-    }
-
-    @Override
-    public Session getSession() {
-        return session;
+    public Collection<Orders> showOrdersToSpecialist(SubDuty subDuty ) {
+        return orderRepository.showOrdersToSpecialist(subDuty);
     }
 }

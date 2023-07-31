@@ -31,10 +31,8 @@ public class AddressServiceImpl implements AddressService {
             if (transaction != null) {
                 transaction.rollback();
             }
-        }// finally {
-//            addressRepository.getSession().close();
-//
-//        }
+        }
+
         return entity;
     }
 
@@ -85,6 +83,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
 
-
-
+    @Override
+    public Address createAddress(Address address) {
+            addressRepository.save(address);
+             return address;
+    }
 }

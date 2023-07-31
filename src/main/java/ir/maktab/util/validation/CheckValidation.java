@@ -2,12 +2,15 @@ package ir.maktab.util.validation;
 
 import ir.maktab.entity.Customer;
 import ir.maktab.entity.Specialist;
+import ir.maktab.util.custom_exception.CustomException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
+import java.time.LocalDate;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,26 +23,31 @@ public class CheckValidation {
     CustomRegex customRegex = new CustomRegex();
 
     public <T> boolean isValid(T object) {
-        ValidatorFactory factory = Validation.byDefaultProvider()
-                .configure()
-                .messageInterpolator(new ParameterMessageInterpolator())
-                .buildValidatorFactory();
+        try {
+            ValidatorFactory factory = Validation.byDefaultProvider()
+                    .configure()
+                    .messageInterpolator(new ParameterMessageInterpolator())
+                    .buildValidatorFactory();
 
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<T>> violations = validator.validate(object);
-        if (violations.size() > 0) {
-            for (ConstraintViolation<T> violation : violations) {
-                try {
-                    throw new IllegalArgumentException();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                    log.error(violation.getMessage());
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<T>> violations = validator.validate(object);
+            if (violations.size() > 0) {
+                for (ConstraintViolation<T> violation : violations) {
+                    try {
+                        throw new CustomException("input is invalid");
+                    } catch (CustomException e) {
+                        System.out.println(e.getMessage());
+                        log.error(violation.getMessage());
+                    }
                 }
+                factory.close();
+                return false;
+            } else {
+                return true;
             }
-            factory.close();
+        }catch (CustomException c){
+            System.out.println(c.getMessage());
             return false;
-        } else {
-            return true;
         }
     }
 
@@ -75,5 +83,6 @@ public class CheckValidation {
     public boolean isImageHaveValidSize(byte[] bytes) {
         return bytes.length <= 300000;
     }
+
 
 }

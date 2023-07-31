@@ -1,17 +1,17 @@
 package ir.maktab.util;
 
 import ir.maktab.base.repository.util.HibernateUtil;
-import ir.maktab.entity.Customer;
-import ir.maktab.entity.Duty;
-import ir.maktab.entity.Specialist;
-import ir.maktab.entity.SubDuty;
+import ir.maktab.entity.*;
+import ir.maktab.entity.enumeration.OrderStatus;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
 import ir.maktab.service.Impl.*;
 import ir.maktab.util.custom_exception.CustomNoResultException;
 import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
+
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -23,6 +23,9 @@ public class Menu {
     DutyServiceImpl dutyService = new DutyServiceImpl(session);
     SubDutyServiceImpl subDutyService = new SubDutyServiceImpl(session);
     WalletServiceImpl walletService = new WalletServiceImpl(session);
+    AddressServiceImpl addressService = new AddressServiceImpl(session);
+    OrderServiceImpl orderService = new OrderServiceImpl(session);
+    SpecialistSuggestionServiceImpl specialistSuggestionService = new SpecialistSuggestionServiceImpl(session);
     // String imagePath = "src/main/java/ir/maktab/util/images/2.jpg";
 
     public void firstMenu() {
@@ -40,35 +43,34 @@ public class Menu {
     public void logIn() {
         System.out.println("=========login==========");
         System.out.println("inter type: 1)admin   2)customer   or 3)specialist");
-         int type=scanner.nextInt();
+        int type = scanner.nextInt();
         System.out.println("email: ");
         String email = scanner.next();
         System.out.println("password: ");
         String password = scanner.next();
         System.out.println("-----------------------------------------------");
-       switch (type) {
+        switch (type) {
 
-               case 1:
-                   if (email.equals("a") && password.equals("a")) {
-                       runAdminMenu();
-                   }
-                   break;
-               case 2:
-                   customerService.loginByEmailAndPassword(email, password);
-                   runCustomerMenu();
-                   break;
-               case 3:
-                   specialistService.loginByEmailAndPassword(email, password);
+            case 1:
+                if (email.equals("a") && password.equals("a")) {
+                    runAdminMenu();
+                }
+                break;
+            case 2:
+                customerService.loginByEmailAndPassword(email, password);
+                break;
+            case 3:
+                specialistService.loginByEmailAndPassword(email, password);
+                break;
+            default:
+                try {
+                    throw new CustomNoResultException("you enter wrong number or user not found try again or signup");
+                } catch (CustomNoResultException c) {
+                    System.out.println(c.getMessage());
+                    firstMenu();
+                }
 
-               default:
-                   try {
-                   throw new CustomNoResultException("you enter wrong number or user not found try again or signup");
-           }catch (CustomNoResultException c){
-                       System.out.println(c.getMessage());
-               firstMenu();
-                   }
-
-       }
+        }
     }
 
     public void adminMenu() {
@@ -81,26 +83,27 @@ public class Menu {
         System.out.println("6)add specialist to subDuty");
         System.out.println("7)remove specialist");
         System.out.println("---------------------------------------");
+        System.out.println("8)logout --------------------- 9)signup");
     }
 
     public void runAdminMenu() {
         while (true) {
             adminMenu();
             switch (scanner.nextInt()) {
-                case 1:
+                case 1 -> {
                     Set<Duty> duties = new HashSet<>(dutyService.load());
                     for (Duty duty : duties
                     ) {
                         System.out.println(duty);
                         System.out.println("----------------------------");
                     }
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     System.out.println("inter name of duty:");
                     Duty duty = new Duty(scanner.next());
                     dutyService.addDuty(duty);
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     Set<Duty> dutiesList = new HashSet<>(dutyService.load());
                     System.out.println("inter name of SubDuty:");
                     String nameOfSubDuty = scanner.next();
@@ -124,9 +127,8 @@ public class Menu {
                             System.out.println();
                         } else System.out.println("number is not valid");
                     }
-
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     System.out.println("firstName");
                     String firstName = scanner.next();
                     System.out.println("lastname");
@@ -143,26 +145,28 @@ public class Menu {
                     Duty candidateduty = new Duty();
                     for (Duty duty1 : Duties
                     ) {
+                        System.out.println(duty1);
                         System.out.println("1)selected 2)anotherDuty");
-                        if (scanner.nextInt() == 1) {
-                            candidateduty = duty1;
-                            break;
-                        } else if (scanner.nextInt() == 2) {
-                            System.out.println();
+                        switch (scanner.nextInt()) {
+                            case 1 -> candidateduty = duty1;
+                            case 2 -> System.out.println();
+                            default -> System.out.println(" inter wrong number");
                         }
                     }
-                    Set<SubDuty> subDuties = new HashSet<>(subDutyService.showAllSubDutyOfDuty(candidateduty));
+                    // Set<SubDuty> subDuties = new HashSet<>(subDutyService.showAllSubDutyOfDuty(candidateduty));
+                    Set<SubDuty> subDuties = new HashSet<>(candidateduty.getSubDuties());
                     Set<SubDuty> candidateSetOfSubDuties = new HashSet<>();
                     for (SubDuty subDuty : subDuties) {
                         System.out.println("1)selected 2)anotherSubDuty");
-                        if (scanner.nextInt() == 1) {
-                            candidateSetOfSubDuties.add(subDuty);
-                        } else if (scanner.nextInt() == 2) {
-                            System.out.println();
+                        switch (scanner.nextInt()) {
+                            case 1 -> candidateSetOfSubDuties.add(subDuty);
+                            case 2 -> System.out.println();
+                            default -> System.out.println("inter wrong number ");
                         }
                     }
                     try {
                         Specialist specialist = Specialist.builder()
+                                .duty(candidateduty)
                                 .firstName(firstName)
                                 .lastname(lastName)
                                 .nationalId(nationalId)
@@ -180,68 +184,64 @@ public class Menu {
                     } catch (IOException e) {
                         //TODO SOMETHING
                     }
-                    break;
-                case 5:
-                    specialistService.confirmSpecialistByAdmin();
-                    break;
-                case 6:
+                }
+                case 5 -> specialistService.confirmSpecialistByAdmin();
+                case 6 -> {
                     Set<Specialist> candidSpecialists = new HashSet<>(specialistService.load());
                     for (Specialist specialist : candidSpecialists
                     ) {
                         System.out.println(specialist);
                         System.out.println("1)select  2)next specialist");
                         try {
-                            if (scanner.nextInt() == 1) {
-                                Set<SubDuty> subDuties2 = specialist.getSubDuties();
-                                if (subDuties2.size() == 0) {
-                                   Set<Duty> dutySet = new HashSet<>(dutyService.load());
-                                    for (Duty duty1:dutySet
-                                         ) {
-                                        System.out.println(duty1);
-                                        System.out.println("1)select  2)next duty");
-                                        if (scanner.nextInt()==1){
-                                            Set<SubDuty> subdutySet =duty1.getSubDuties();
-                                            for (SubDuty SubDuty:subdutySet
-                                                 ) {
-                                                System.out.println(SubDuty);
-                                                System.out.println("1)select  2)next subDuty");
-                                                if (scanner.nextInt()==1){
-                                                    Set<SubDuty> subDuties1=specialist.getSubDuties();
+                            switch (scanner.nextInt()) {
+                                case 1 -> {
+                                    Set<SubDuty> subDuties2 = specialist.getSubDuties();
+                                    if (subDuties2.size() == 0) {
+                                        Set<SubDuty> subdutySet = specialist.getDuty().getSubDuties();
+                                        for (SubDuty SubDuty : subdutySet) {
+                                            System.out.println(SubDuty);
+                                            System.out.println("1)select  2)next subDuty");
+                                            switch (scanner.nextInt()) {
+                                                case 1 -> {
+                                                    Set<SubDuty> subDuties1 = specialist.getSubDuties();
                                                     subDuties1.add(SubDuty);
                                                     specialist.setSubDuties(subDuties1);
                                                     specialistService.update(specialist);
-                                                }else System.out.println();
+                                                }
+                                                case 2 -> System.out.println("--------------------------------------");
+                                                default -> System.out.println("inter wrong number");
                                             }
-                                        }else System.out.println();
-                                    }
-                                   // throw new CustomNoResultException("this special can not accept any subDuty");
-                                }else {
-                            Duty temporaryDuty = subDuties2.iterator().next().getDuty();
-                            Set<SubDuty> subDuties3 = temporaryDuty.getSubDuties();
-                            subDuties3.removeAll(subDuties2);
-
-                                if (subDuties3.size() == 0) {
-                                    throw new CustomNoResultException("this special can not accept any subDuty");
-                                }   else {
-                                    for (SubDuty subDuty : subDuties3
-                                    ) {
-                                        System.out.println(subDuty);
-                                        System.out.println("1)select  2)next specialist");
-                                        if (scanner.nextInt() == 1) {
-                                            specialistService.addSpecialistToSubDuty(specialist, subDuty);
-                                        } else if (scanner.nextInt() == 2) {
-                                            System.out.println();
-                                        } else System.out.println("number is wrong");
+                                        }
+                                    } else {
+                                        Duty temporaryDuty = subDuties2.iterator().next().getDuty();
+                                        Set<SubDuty> subDuties3 = temporaryDuty.getSubDuties();
+                                        subDuties3.removeAll(subDuties2);
+                                        if (subDuties3.size() == 0) {
+                                            throw new CustomNoResultException("this special can not accept any subDuty or accepted full sub duty");
+                                        } else {
+                                            for (SubDuty subDuty : subDuties3
+                                            ) {
+                                                System.out.println(subDuty);
+                                                System.out.println("1)select  2)next specialist");
+                                                switch (scanner.nextInt()) {
+                                                    case 1 ->
+                                                            specialistService.addSpecialistToSubDuty(specialist, subDuty);
+                                                    case 2 -> System.out.println();
+                                                    default -> System.out.println("number is wrong");
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                            }}}catch (CustomNoResultException c){
-                                System.out.println(c.getMessage());
-
+                                case 2 -> System.out.println();
+                                default -> System.out.println("inter wrong number");
+                            }
+                        } catch (CustomNoResultException c) {
+                            System.out.println(c.getMessage());
                         }
                     }
-
-                    break;
-                case 7:
+                }
+                case 7 -> {
                     Set<Specialist> specialistSetCandidateForRemove = new HashSet<>(specialistService.load());
                     for (Specialist specialist : specialistSetCandidateForRemove
                     ) {
@@ -249,28 +249,30 @@ public class Menu {
                         System.out.println("--------------------------------------");
                         System.out.println("1)select  2)next specialist");
                         switch (scanner.nextInt()) {
-                            case 1: Set<SubDuty> subDuties1 = specialist.getSubDuties();
-                            Set<SubDuty> copySubDuties1 = new HashSet<>();
-                            for (SubDuty subDuty : subDuties1
-                            ) {
-                                System.out.println(subDuty);
-                                System.out.println("1)select  2)next subDuty");
-                                switch (scanner.nextInt()) {
-                                    case 1 -> copySubDuties1.add(subDuty);
-                                    case 2 -> System.out.println();
-                                    default ->  System.out.println("wrong number inter");
+                            case 1 -> {
+                                Set<SubDuty> subDuties1 = specialist.getSubDuties();
+                                Set<SubDuty> copySubDuties1 = new HashSet<>();
+                                for (SubDuty subDuty : subDuties1
+                                ) {
+                                    System.out.println(subDuty);
+                                    System.out.println("------------------------------");
+                                    System.out.println("1)select  2)next subDuty");
+                                    switch (scanner.nextInt()) {
+                                        case 1 -> copySubDuties1.add(subDuty);
+                                        case 2 -> System.out.println();
+                                        default -> System.out.println("wrong number inter");
+                                    }
                                 }
+                                subDuties1.removeAll(copySubDuties1);
+                                specialist.setSubDuties(subDuties1);
+                                specialistService.update(specialist);
                             }
-                            subDuties1.removeAll(copySubDuties1);
-                            specialist.setSubDuties(subDuties1);
-                            specialistService.update(specialist);
-                            break;
-                        case 2:
-                            System.out.println();
-                            break;
+                            case 2 -> System.out.println();
                         }
                     }
-                    break;
+                }
+                case 8 -> logIn();
+                case 9 -> firstMenu();
             }
         }
     }
@@ -299,7 +301,8 @@ public class Menu {
                 case 2 -> System.out.println();
             }
         }
-        Set<SubDuty> subDuties = new HashSet<>(subDutyService.showAllSubDutyOfDuty(candidateduty));
+       // Set<SubDuty> subDuties = new HashSet<>(subDutyService.showAllSubDutyOfDuty(candidateduty));
+        Set<SubDuty> subDuties = new HashSet<>(candidateduty.getSubDuties());
         Set<SubDuty> candidateSetOfSubDuties = new HashSet<>();
         for (SubDuty subDuty : subDuties) {
             System.out.println(subDuty);
@@ -307,11 +310,12 @@ public class Menu {
             switch (scanner.nextInt()) {
                 case 1 -> candidateSetOfSubDuties.add(subDuty);
                 case 2 -> System.out.println();
-                default -> System.out.println("");
+                default -> System.out.println("inter wrong number");
             }
         }
         try {
             Specialist specialist = Specialist.builder()
+                    .duty(candidateduty)
                     .firstName(firstName)
                     .lastname(lastName)
                     .nationalId(nationalId)
@@ -334,16 +338,63 @@ public class Menu {
         logIn();
     }
 
+    public void setSpecialistSuggestion() {
+        Set<SubDuty> specialistSubDuties = new HashSet<>(CheckValidation.memberTypespecialist.getSubDuties());
+        for (SubDuty subDuty : specialistSubDuties
+        ) {
+            System.out.println(subDuty);
+            System.out.println("--------------------------------");
+            System.out.println("1)select  2)another subDuty");
+            switch (scanner.nextInt()) {
+                case 1 -> {
+                    Set<Orders> ordersSet = new HashSet<>(orderService.showOrdersToSpecialist(subDuty));
+                    if (ordersSet.size() == 0) {
+                        System.out.println("no any order exist for this subDuty");
+                    } else {
+                        for (Orders order : ordersSet) {
+                            System.out.println(order);
+                            System.out.println("1)select  2)another order");
+                            switch (scanner.nextInt()) {
+                                case 1 -> {
+                                    System.out.println("inter proposed price");
+                                    double proposedPrice = scanner.nextDouble();
+                                    System.out.println("inter workTime PerHour");
+                                    Integer workTimePerHour = scanner.nextInt();
+                                    SpecialistSuggestion specialistSuggestion = SpecialistSuggestion.builder()
+                                            .specialist(CheckValidation.memberTypespecialist)
+                                            .order(orderService.updateOrderToNextLevel(order, OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SELECTION))
+                                            .DateOfSuggestion(LocalDate.now())
+                                            .TimeOfSuggestion(LocalTime.now())
+                                            .TimeOfStartWork(LocalTime.now())
+                                            .durationOfWorkPerHour(workTimePerHour)
+                                            .proposedPrice(subDuty.getBasePrice() + proposedPrice)
+                                            .build();
+                                    specialistSuggestionService.submitSpecialistSuggestion(specialistSuggestion);
+                                }
+
+                                case 2 -> System.out.println();
+                                default -> System.out.println("inter wrong number ");
+                            }
+                        }
+                    }
+                }
+                case 2 -> System.out.println();
+                default -> System.out.println("inter wrong number ");
+            }
+
+        }
+    }
+
     public void showMenuForSpecialist() {
+        System.out.println("----------Specialist Menu------------");
         System.out.println("1)login");
         System.out.println("2)change password");
         System.out.println("3)showImage");
+        System.out.println("4)setSpecialistSuggestion");
     }
 
     public void runSpecialistMenu() {
-        boolean flag=true;
-
-        while (flag) {
+        while (true) {
             showMenuForSpecialist();
             switch (scanner.nextInt()) {
                 case 1 -> logIn();
@@ -356,7 +407,10 @@ public class Menu {
                     String newPassword = scanner.next();
                     specialistService.changePassword(email, oldPassword, newPassword);
                 }
-                case 3->{specialistService.convertByteArrayToImage(CheckValidation.memberTypespecialist,"t.jpg");}
+                case 3 -> specialistService.convertByteArrayToImage(CheckValidation.memberTypespecialist, "t.jpg");
+
+                case 4 -> setSpecialistSuggestion();
+
                 default -> {
                     try {
                         throw new CustomNoResultException("you enter wrong number or user not found try again or signup");
@@ -390,28 +444,85 @@ public class Menu {
                 .wallet(walletService.createWallet())
                 .build();
         customerService.addCustomer(customer);
-
         logIn();
     }
 
     public void customerMenu() {
+        System.out.println("---------Customer Menu--------");
         System.out.println("1)login");
-        System.out.println("signup");
-        System.out.println("----");
-        runCustomerMenu();
+        System.out.println("2)signup");
+        System.out.println("3)submit order");
     }
 
     public void runCustomerMenu() {
-        customerMenu();
         while (true) {
-            showMenuForSpecialist();
+            customerMenu();
             switch (scanner.nextInt()) {
-                case 1:
-                    logIn();
-                    break;
-                case 2:
-                    customerSignup();
-                    break;
+                case 1 -> logIn();
+                case 2 -> customerSignup();
+                case 3 -> submitOrders();
+            }
+        }
+    }
+
+    public Address setAddressCustomer() {
+        System.out.println("inter province");
+        String province = scanner.next();
+        System.out.println("inter city");
+        String city = scanner.next();
+        System.out.println("inter street");
+        String street = scanner.next();
+        System.out.println("inter postalCode");
+        String postalCode = scanner.next();
+        System.out.println("inter houseNumber");
+        Integer houseNumber = scanner.nextInt();
+        return Address.builder()
+                .province(province)
+                .city(city)
+                .street(street)
+                .postalCode(postalCode)
+                .houseNumber(houseNumber)
+                .build();
+    }
+
+    public void submitOrders() {
+        Set<Duty> duties = new HashSet<>(dutyService.load());
+        for (Duty duty : duties
+        ) {
+            System.out.println(duty);
+            System.out.println("1)select  2)another duty");
+            switch (scanner.nextInt()) {
+                case 1 -> {
+                    Set<SubDuty> subDuties = new HashSet<>(duty.getSubDuties());
+                    for (SubDuty subDuty : subDuties) {
+                        System.out.println(subDuty);
+                        System.out.println("1)select  2)another subDuty");
+                        switch (scanner.nextInt()) {
+                            case 1 -> {
+                                Address address = setAddressCustomer();
+                                System.out.println("inter proposed price");
+                                double proposedPrice = scanner.nextDouble();
+                                System.out.println("write description of order");
+                                String description=scanner.next();
+                                Orders orders = Orders.builder()
+                                        .customer(CheckValidation.memberTypeCustomer)
+                                        .subDuty(subDuty)
+                                        .description(description)
+                                        .address(addressService.createAddress(address))
+                                        .DateOfWork(LocalDate.now())
+                                        .timeOfWork(LocalDateTime.now())
+                                        .proposedPrice(subDuty.getBasePrice() + proposedPrice)
+                                        .orderStatus(OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION)
+                                        .build();
+                                orderService.submitOrder(orders);
+                            }
+                            case 2 -> System.out.println();
+                            default -> System.out.println("inter wrong number ");
+                        }
+                    }
+                }
+                case 2 -> System.out.println();
+                default -> System.out.println("inter wrong number ");
             }
         }
     }

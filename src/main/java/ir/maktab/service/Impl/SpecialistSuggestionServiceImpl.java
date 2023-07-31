@@ -33,8 +33,6 @@ public class SpecialistSuggestionServiceImpl implements SpecialistSuggestionServ
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            specialistSuggestionRepository.getSession().close();
         }
         return specialistSuggestion;
     }
@@ -49,8 +47,6 @@ public class SpecialistSuggestionServiceImpl implements SpecialistSuggestionServ
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            specialistSuggestionRepository.getSession().close();
         }
         return specialistSuggestion;
     }
@@ -65,8 +61,6 @@ public class SpecialistSuggestionServiceImpl implements SpecialistSuggestionServ
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            specialistSuggestionRepository.getSession().close();
         }
         return specialistSuggestion;
     }
@@ -82,4 +76,18 @@ public class SpecialistSuggestionServiceImpl implements SpecialistSuggestionServ
     }
 
 
+    @Override
+    public SpecialistSuggestion submitSpecialistSuggestion(SpecialistSuggestion specialistSuggestion) {
+        try {
+            transaction.begin();
+
+            specialistSuggestionRepository.save(specialistSuggestion);
+            transaction.commit();
+        } catch (TransactionException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return specialistSuggestion;
+    }
 }

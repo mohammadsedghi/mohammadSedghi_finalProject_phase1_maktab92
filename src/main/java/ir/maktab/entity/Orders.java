@@ -15,9 +15,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Orders extends BaseEntity<Long> {
     @ManyToOne
     Customer customer;
+    @ManyToOne
+    SubDuty subDuty;
+    @NotNull(message = "this field must be have value")
+    @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
+    Double proposedPrice;
     @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
     @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
     @NotNull(message = "this field must be have value")

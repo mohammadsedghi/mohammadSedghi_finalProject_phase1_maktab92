@@ -4,7 +4,6 @@ package ir.maktab.service.Impl;
 
 import ir.maktab.entity.Specialist;
 import ir.maktab.entity.SubDuty;
-import ir.maktab.entity.Wallet;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
 import ir.maktab.repository.Impl.SpecialistRepositoryImpl;
 import ir.maktab.repository.SpecialistRepository;
@@ -24,7 +23,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class SpecialistServiceImpl  implements SpecialistService {
-    private Session session;
+    private final Session session;
      SpecialistRepository specialistRepository;
     CheckValidation checkValidation=new CheckValidation();
 //WalletServiceImpl walletService=new WalletServiceImpl(session);
@@ -40,9 +39,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
             specialistRepository.update(specialist);
             transaction.commit();
         } catch (TransactionException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            transaction.rollback();
         }
         return specialist;
     }
@@ -53,9 +50,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
             specialistRepository.remove(specialist);
             transaction.commit();
         } catch (TransactionException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            transaction.rollback();
         }
         return specialist;
     }
@@ -104,7 +99,6 @@ public class SpecialistServiceImpl  implements SpecialistService {
                 specialistRepository.findByEmailAndPassword(email, encryptSpecialistPassword(password)).ifPresentOrElse(
                         specialist -> {
                             CheckValidation.memberTypespecialist = specialist;
-
                                 if (CheckValidation.memberTypespecialist.getStatus()==SpecialistRegisterStatus.WAITING_FOR_CONFIRM){
                                     throw new CustomNoResultException("you cannot access before admin confirmed you");
                                 }else menu.runSpecialistMenu();
@@ -113,7 +107,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
                             throw new CustomNoResultException("Specialist not found");
                         }
                 );
-            }
+            }else {throw new CustomNoResultException("you inter invalid input for login");}
         }catch (CustomNoResultException c) {
             CheckValidation.memberTypespecialist =new Specialist();
             System.out.println(c.getMessage());
@@ -127,7 +121,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
         Scanner scanner=new Scanner(System.in);
        Set<Specialist> unConfirmSpecialist=new HashSet<>(specialistRepository.showUnConfirmSpecialist());
     if(unConfirmSpecialist.size()==0){
-
+        System.out.println("no specialist unConfirm found");
     }else{
         for (Specialist specialist:unConfirmSpecialist
              ) {
@@ -141,9 +135,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
                     specialistRepository.update(specialist);
                     transaction.commit();
                 } catch (TransactionException e) {
-                    if (transaction != null) {
-                        transaction.rollback();
-                    }
+                    transaction.rollback();
                 }
             }
         }
@@ -155,10 +147,9 @@ public class SpecialistServiceImpl  implements SpecialistService {
         byte[] fileContent = FileUtils.readFileToByteArray(new File(imagePath));
     if (!checkValidation.isJpgImage(fileContent))throw new CustomException("image file format is not valid");
    if(!checkValidation.isImageHaveValidSize(fileContent)){throw new CustomException("image size must be lower than 300KB");}
-        String encodedString = Base64.getEncoder().encodeToString(fileContent);
-        return encodedString;
+        return Base64.getEncoder().encodeToString(fileContent);
     } catch (IOException |CustomException e) {
-        e.printStackTrace();
+        System.out.println(e.getMessage());
     }
     return null;
 }

@@ -14,6 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Address extends BaseEntity<Long> {
     @NotNull(message = "this field must be have value")
     @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
@@ -28,5 +29,5 @@ public class Address extends BaseEntity<Long> {
     @Pattern(message = "postalCode must be just digit",regexp ="^\\d+$")
     String postalCode;
 
-    Integer HouseNumber;
+    Integer houseNumber;
 }

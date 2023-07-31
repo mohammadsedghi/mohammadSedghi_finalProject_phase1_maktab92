@@ -13,6 +13,7 @@ public class CustomRegex {
     String validDigitStr="^[a-zA-Z0-9]+$";
     String validPositiveDigit="^[+]?\\d+([.]\\d+)?$";
     String validEmptyStr="(^$|^.*@.*\\..*$)";
+  String password="^(?=.*[a-zA-Z])(?=.*\\d).{8,}$";
     String validEmail="^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$";
     public String getErrorMessageForValidStr(String fieldName){
         return fieldName+"must be just letters";
@@ -26,22 +27,33 @@ public class CustomRegex {
     public String getErrorMessageForValidPositiveDigit(Integer fieldName){
         return fieldName+"must be just positive digit";
     }
-    public String getErrorMessageForValidEmptyStr(Integer fieldName){
+    public String getErrorMessageForValidEmptyStr(String fieldName){
         return fieldName+"must be  have a value but input is  empty";
     }
-    public String getErrorMessageForValidNotNullStr(Integer fieldName){
+    public String getErrorMessageForValidNotNullStr(String fieldName){
         return fieldName+"must be not null but input is  null";
     }
-    public String getErrorMessageForValidEmail(Integer fieldName){
-        return fieldName+"must be not null but input is  null";
+    public String getErrorMessageForValidEmail(String email){
+        return email+"must be not null but input is  invalid or null";
     }
-    public Boolean checkInputIsValid(String input,String regex){
+    public Boolean checkOneInputIsValid(String input,String regex){
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         if (matcher.matches()) {
             return true;
         } else {
            return false;
+        }
+    }
+    public Boolean checkTwoInputIsValid(String inputOne,String regexForInputOne,String inputTwo,String regexForInputTwo){
+        Pattern patternOne = Pattern.compile(regexForInputOne);
+        Matcher matcherOne = patternOne.matcher(inputOne);
+        Pattern patternTwo = Pattern.compile(regexForInputTwo);
+        Matcher matcherTwo = patternTwo.matcher(inputTwo);
+        if (matcherOne.matches()&& matcherTwo.matches()) {
+            return true;
+        } else {
+            return false;
         }
     }
     public Boolean inputIsNull(String input){

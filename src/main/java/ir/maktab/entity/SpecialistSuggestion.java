@@ -16,21 +16,24 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class SpecialistSuggestion extends BaseEntity<Long> {
+    @ManyToOne
+    Specialist specialist;
 //    @ManyToMany
 //    @JoinTable(
 //            name="specialistSuggestion_orders",
-//            joinColumns=@JoinColumn(name="specialistSuggestion_ID"),
-//            inverseJoinColumns=@JoinColumn(name="orders_ID"))
-//    Set<Order> orders;
-    //, referencedColumnName="id"
-    //, referencedColumnName="id"
+//            joinColumns=@JoinColumn(name="specialistSuggestion_ID", referencedColumnName="id"),
+//            inverseJoinColumns=@JoinColumn(name="orders_ID" , referencedColumnName="id"))
+//    Set<Orders> orders;
+    @ManyToOne
+    Orders order;
     @NotNull(message = "this field must be have value")
     LocalDate DateOfSuggestion;
     @NotNull(message = "this field must be have value")
     LocalTime TimeOfSuggestion;
     @NotNull(message = "this field must be have value")
-    Double price;
+    Double proposedPrice;
     @NotNull(message = "this field must be have value")
     LocalTime TimeOfStartWork;
     @NotNull(message = "this field must be have value")

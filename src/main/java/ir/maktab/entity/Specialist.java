@@ -19,12 +19,13 @@ import java.util.Set;
 @Entity
 
 public class Specialist extends Person {
-
+    @ManyToOne
+    Duty duty;
     @ManyToMany
     @JoinTable(
-            name = "Specialist_SubServices",
+            name = "Specialist_SubDuties",
             joinColumns = @JoinColumn(name = "Specialist_ID", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "SubServices_ID", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "SubDuties_ID", referencedColumnName = "id"))
     Set<SubDuty> subDuties;
     @OneToOne
     Wallet wallet;
@@ -48,30 +49,29 @@ public class Specialist extends Person {
                 ", registerTime=" + registerTime +
                 "} " ;
     }
-
-    @Builder
+@Builder
     public Specialist(@NotNull(message = "this field must be have value")
                       @Length(message = "firstName must be 100 character", max = 100)
-                      @Pattern(message = "province must be just letters", regexp = "^[a-zA-Z]+$") String firstName,
+                      @Pattern(message = "firstName must be just letters", regexp = "^[a-zA-Z]+$") String firstName,
                       @NotNull(message = "this field must be have value")
                       @Length(message = "lastName must be 100 character", max = 100)
-                      @Pattern(message = "province must be just letters", regexp = "^[a-zA-Z]+$") String lastname,
+                      @Pattern(message = "lastname must be just letters", regexp = "^[a-zA-Z]+$") String lastname,
                       @NotNull(message = "this field must be have value")
                       @Length(message = "national id must be 10 digit", min = 10, max = 10)
-                      @Pattern(message = "postalCode must be just digit", regexp = "^\\d+$") String nationalId,
+                      @Pattern(message = "nationalId must be just digit", regexp = "^\\d+$") String nationalId,
                       @NotNull(message = "email must be have value")
                       @Pattern(message = "email is not valid", regexp = "^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$") String email,
                       @NotNull(message = "this field must be have value")
                       @Pattern(message = "password is not valid", regexp = "^[a-zA-Z0-9]+$")
                       @Length(message = "password must be 10 character", min = 10, max = 10) String password,
                       @NotNull(message = "this field must be have value") LocalDate registerDate,
-                      @NotNull(message = "this field must be have value") LocalTime registerTime, Set<SubDuty> subDuties, Wallet wallet, SpecialistRegisterStatus status, Integer score, String imageData) {
+                      @NotNull(message = "this field must be have value") LocalTime registerTime, Duty duty, Set<SubDuty> subDuties, Wallet wallet, SpecialistRegisterStatus status, Integer score, String imageData) {
         super(firstName, lastname, nationalId, email, password, registerDate, registerTime);
+        this.duty = duty;
         this.subDuties = subDuties;
         this.wallet = wallet;
         this.status = status;
         this.score = score;
         this.imageData = imageData;
-
     }
 }
