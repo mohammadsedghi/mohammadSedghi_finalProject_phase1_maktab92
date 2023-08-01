@@ -4,6 +4,7 @@ import ir.maktab.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SpecialistSuggestion extends BaseEntity<Long> {
     @ManyToOne
     Specialist specialist;

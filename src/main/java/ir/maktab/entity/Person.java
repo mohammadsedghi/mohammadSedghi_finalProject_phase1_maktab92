@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public  class Person extends BaseEntity<Long> {
     @NotNull(message = "this field must be have value")
     @Length(message ="firstName must be 100 character",max = 100)

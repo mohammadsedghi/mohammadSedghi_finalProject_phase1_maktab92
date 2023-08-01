@@ -6,6 +6,8 @@ import ir.maktab.entity.SubDuty;
 import ir.maktab.repository.Impl.SubDutyRepositoryImpl;
 import ir.maktab.repository.SubDutyRepository;
 import ir.maktab.service.SubDutyService;
+import ir.maktab.util.Menu;
+import ir.maktab.util.custom_exception.CustomException;
 import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -115,4 +117,21 @@ CheckValidation checkValidation=new CheckValidation();
         }
         return false;
     }
+
+    @Override
+    public boolean isExistSubDuty(String name) {
+        Menu menu=new Menu();
+        try {
+            subDutyRepository.isExistSubDuty(name).ifPresent(
+                    subDuty -> {
+                        throw new CustomException("this subDuty is exist");
+                    }
+            );
+        }catch (CustomException e){
+            System.out.println(e.getMessage());
+            menu.runAdminMenu();
+            return true;
+        }return false;
+    }
+
 }

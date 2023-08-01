@@ -12,4 +12,5 @@ public interface SubDutyService  {
     Collection<SubDuty> showAllSubDutyOfDuty(Duty duty);
     boolean editSubDutyPrice(SubDuty subduty,Double price);
     boolean editSubDutyDescription(SubDuty subduty,String description);
+    boolean isExistSubDuty(String name);
 }

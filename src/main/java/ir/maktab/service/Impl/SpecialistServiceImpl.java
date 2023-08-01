@@ -9,6 +9,7 @@ import ir.maktab.repository.Impl.SpecialistRepositoryImpl;
 import ir.maktab.repository.SpecialistRepository;
 import ir.maktab.service.SpecialistService;
 import ir.maktab.util.Menu;
+import ir.maktab.util.custom_exception.CustomInputOutputException;
 import ir.maktab.util.hash_password.EncryptPassword;
 import ir.maktab.util.validation.CheckValidation;
 import ir.maktab.util.custom_exception.CustomException;
@@ -141,20 +142,19 @@ public class SpecialistServiceImpl  implements SpecialistService {
     }
     }
 
-    public String convertImageToImageData(String imagePath)throws IOException {
+    public String convertImageToImageData(String imagePath) throws CustomInputOutputException {
     try {
         byte[] fileContent = FileUtils.readFileToByteArray(new File(imagePath));
-    if (!checkValidation.isJpgImage(fileContent))throw new CustomException("image file format is not valid");
-   if(!checkValidation.isImageHaveValidSize(fileContent)){throw new CustomException("image size must be lower than 300KB");}
+    if (!checkValidation.isJpgImage(fileContent))throw new CustomInputOutputException("image file format is not valid");
+   if(!checkValidation.isImageHaveValidSize(fileContent)){throw new CustomInputOutputException("image size must be lower than 300KB");}
         return Base64.getEncoder().encodeToString(fileContent);
-    } catch (IOException |CustomException e) {
+    } catch ( IOException|CustomInputOutputException e) {
         System.out.println(e.getMessage());
+        throw new CustomInputOutputException("image size must be lower than 300KB");
     }
-    return null;
+
 }
     public  void convertByteArrayToImage(Specialist specialist,String newFilePath ){
-        //String newFilePath = "t.jpg";
-
             Optional<Specialist> SpecialistId = specialistRepository.findById(specialist.getId());
             SpecialistId.ifPresentOrElse(member -> {
                         byte[] imageData = Base64.getDecoder().decode(member.getImageData());

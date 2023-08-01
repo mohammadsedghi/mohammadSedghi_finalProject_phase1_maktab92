@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Setter
 @Getter
@@ -15,6 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Address extends BaseEntity<Long> {
     @NotNull(message = "this field must be have value")
     @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")

@@ -1,13 +1,16 @@
 package ir.maktab.repository.Impl;
 
 import ir.maktab.base.repository.BaseRepositoryImpl;
+import ir.maktab.entity.Customer;
 import ir.maktab.entity.Duty;
 import ir.maktab.entity.Specialist;
 import ir.maktab.entity.SubDuty;
 import ir.maktab.repository.SubDutyRepository;
+import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class SubDutyRepositoryImpl  extends BaseRepositoryImpl<SubDuty,Long>
         implements SubDutyRepository {
@@ -35,5 +38,17 @@ public class SubDutyRepositoryImpl  extends BaseRepositoryImpl<SubDuty,Long>
                 .setParameter("duty",duty)
                 .getResultList();
 
+    }
+
+    @Override
+    public Optional<SubDuty> isExistSubDuty(String name) {
+        String hql = "select sd from SubDuty sd where sd.name=:name ";
+        try {
+            return Optional.ofNullable(session.createQuery(hql, SubDuty.class)
+                    .setParameter("name", name)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

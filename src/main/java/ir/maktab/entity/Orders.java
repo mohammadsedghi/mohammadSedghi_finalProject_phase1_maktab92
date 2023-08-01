@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Entity
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Orders extends BaseEntity<Long> {
     @ManyToOne
     Customer customer;

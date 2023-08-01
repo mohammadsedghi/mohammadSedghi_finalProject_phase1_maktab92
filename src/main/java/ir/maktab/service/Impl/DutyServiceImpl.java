@@ -3,6 +3,7 @@ import ir.maktab.entity.Duty;
 import ir.maktab.repository.DutyRepository;
 import ir.maktab.repository.Impl.DutyRepositoryImpl;
 import ir.maktab.service.DutyService;
+import ir.maktab.util.custom_exception.CustomException;
 import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -23,15 +24,20 @@ public class DutyServiceImpl implements DutyService {
     }
     public Duty addDuty(Duty duty) {
          Transaction transaction=session.getTransaction();
-         if (!checkValidation.isValid(duty)){return new Duty();}
         try {
             transaction.begin();
+         if (!checkValidation.isValid(duty)){return new Duty();}
+         dutyRepository.load().forEach(duty1 -> {
+             if (duty1 .getName().equals(duty.getName())) {
+               throw new CustomException("this duty name is exist") ;
+             }
+         });
             dutyRepository.save(duty);
             transaction.commit();
-        } catch (TransactionException e) {
-            if (transaction != null) {
+        } catch (TransactionException | CustomException e) {
+            System.out.println(e.getMessage());
                 transaction.rollback();
-            }
+
         }
         return duty;
     }
