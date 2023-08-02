@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Set;
 
 public interface OrderService {
-    Orders submitOrder(Orders orders);
+    Orders submitOrder(Orders orders,String priceOfOrder,String subDutyBasePrice);
     Collection<Orders> showOrdersToSpecialist(SubDuty subDuty );
     Orders updateOrderToNextLevel(Orders orders, OrderStatus orderStatus);
 }

@@ -10,6 +10,7 @@ import ir.maktab.util.custom_exception.CustomException;
 import ir.maktab.util.custom_exception.CustomInputOutputException;
 import ir.maktab.util.custom_exception.CustomNoResultException;
 import ir.maktab.util.validation.CheckValidation;
+import ir.maktab.util.validation.CustomRegex;
 import org.hibernate.Session;
 
 
@@ -535,6 +536,7 @@ public class Menu {
     }
 
     public Address setAddressCustomer() {
+        CustomRegex customRegex=new CustomRegex();
         System.out.println("inter province");
         String province = scanner.next();
         System.out.println("inter city");
@@ -544,14 +546,22 @@ public class Menu {
         System.out.println("inter postalCode");
         String postalCode = scanner.next();
         System.out.println("inter houseNumber");
-        Integer houseNumber = scanner.nextInt();
-        return Address.builder()
-                .province(province)
-                .city(city)
-                .street(street)
-                .postalCode(postalCode)
-                .houseNumber(houseNumber)
-                .build();
+        String houseNumber = scanner.next();
+        try {
+            if (!customRegex.checkOneInputIsValid(houseNumber, customRegex.getValidPrice())) {
+                throw new CustomException("house number must have positive number");
+            }else { return Address.builder()
+                    .province(province)
+                    .city(city)
+                    .street(street)
+                    .postalCode(postalCode)
+                    .houseNumber(Integer.parseInt(houseNumber))
+                    .build();}
+        }catch (CustomException ce){
+            System.out.println(ce.getMessage());
+
+        }
+       return new Address();
     }
 
     public void submitOrders() {
@@ -569,9 +579,9 @@ public class Menu {
                         switch (scanner.nextInt()) {
                             case 1 -> {
                                 Address address = setAddressCustomer();
-                                System.out.println("inter proposed price");
-                                double proposedPrice = scanner.nextDouble();
-                                proposedPrice+=subDuty.getBasePrice();
+                                System.out.println("inter proposed price(please notice that this price value add with" +
+                                        "sub duty price ");
+                                String proposedPrice = scanner.next();
                                 System.out.println("write description of order");
                                 String description = scanner.next();
                                 Orders orders = Orders.builder()
@@ -581,10 +591,10 @@ public class Menu {
                                         .address(addressService.createAddress(address))
                                         .DateOfWork(LocalDate.now())
                                         .timeOfWork(LocalTime.now())
-                                        .proposedPrice(proposedPrice)
                                         .orderStatus(OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION)
                                         .build();
-                                orderService.submitOrder(orders);
+                                orderService.submitOrder(orders,proposedPrice,String.valueOf(subDuty.getBasePrice()));
+                                System.out.println("---------------------------------------------------");
                             }
                             case 2 -> System.out.println();
                             default -> System.out.println("inter wrong number ");

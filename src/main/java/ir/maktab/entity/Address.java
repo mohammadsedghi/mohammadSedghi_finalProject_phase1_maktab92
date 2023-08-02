@@ -4,6 +4,7 @@ import ir.maktab.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -30,6 +31,7 @@ public class Address extends BaseEntity<Long> {
     @NotNull(message = "postalCode must be have value")
     @Pattern(message = "postalCode must be just digit",regexp ="^\\d+$")
     String postalCode;
-    @NotNull(message = "postalCode must be have value")
+    @NotNull(message = "houseNumber must be have value")
+    @Digits(integer = 10,fraction = 0,message = "houseNumber must be number")
     Integer houseNumber;
 }

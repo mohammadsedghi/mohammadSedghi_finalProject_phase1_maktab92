@@ -1,6 +1,5 @@
 package ir.maktab.util.validation;
 
-import ir.maktab.util.custom_exception.CustomNumberFormatException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,11 +51,7 @@ public class CustomRegex {
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
     }
-//    public Boolean checkOneInputIsValid(String input, String regex) {
-//        Pattern pattern = Pattern.compile(regex);
-//        Matcher matcher = pattern.matcher(String.valueOf(input));
-//        return matcher.matches();
-//    }
+
 
 
 
