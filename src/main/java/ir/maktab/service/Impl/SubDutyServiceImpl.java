@@ -8,7 +8,9 @@ import ir.maktab.repository.SubDutyRepository;
 import ir.maktab.service.SubDutyService;
 import ir.maktab.util.Menu;
 import ir.maktab.util.custom_exception.CustomException;
+import ir.maktab.util.custom_exception.CustomNumberFormatException;
 import ir.maktab.util.validation.CheckValidation;
+import ir.maktab.util.validation.CustomRegex;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
@@ -69,11 +71,7 @@ CheckValidation checkValidation=new CheckValidation();
             subDutyRepository.remove(subDuty);
             transaction.commit();
         } catch (TransactionException e) {
-            if (transaction != null) {
                 transaction.rollback();
-            }
-        } finally {
-            subDutyRepository.getSession().close();
         }
         return subDuty;
     }
@@ -88,24 +86,37 @@ CheckValidation checkValidation=new CheckValidation();
     }
 
     @Override
-    public boolean editSubDutyPrice(SubDuty subduty, Double price) {
+    public boolean editSubDutyPrice(SubDuty subduty, String  price) {
         Transaction transaction= session.getTransaction();
-        subduty.setBasePrice(price);
+        CustomRegex customRegex=new CustomRegex();
         try {
-            transaction.begin();
-            subDutyRepository.update(subduty);
-            transaction.commit();
-            return true;
-        }catch (TransactionException t){
-            System.out.println(t.getMessage());
-        }
+            if (customRegex.checkOneInputIsValid(price, customRegex.getValidPrice())) {
+                subduty.setBasePrice(Double.parseDouble(price));
+            try {
+                transaction.begin();
+                subDutyRepository.update(subduty);
+                transaction.commit();
+                return true;
+            } catch (TransactionException t) {
+                System.out.println(t.getMessage());
+            }
+        }else throw new CustomNumberFormatException("input basePrice is invalid");
 
+        }catch (CustomNumberFormatException cnf){
+            System.out.println(cnf.getMessage());
+        }
         return false;
     }
 
     @Override
     public boolean editSubDutyDescription(SubDuty subduty, String description) {
         Transaction transaction= session.getTransaction();
+        CustomRegex customRegex=new CustomRegex();
+        try {
+
+
+       if(customRegex.checkOneInputIsValid(description,customRegex.getValidStr()))
+       {
         subduty.setDescription(description);
         try {
             transaction.begin();
@@ -114,6 +125,12 @@ CheckValidation checkValidation=new CheckValidation();
             return true;
         }catch (TransactionException t){
             System.out.println(t.getMessage());
+        }
+       }else{ throw new CustomException("input description is invalid");
+       }
+        }catch (CustomException c){
+            System.out.println(c.getMessage());
+            throw new CustomException("input description is invalid");
         }
         return false;
     }

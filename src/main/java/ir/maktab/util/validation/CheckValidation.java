@@ -4,6 +4,7 @@ import ir.maktab.entity.Admin;
 import ir.maktab.entity.Customer;
 import ir.maktab.entity.Specialist;
 import ir.maktab.util.custom_exception.CustomException;
+import ir.maktab.util.custom_exception.CustomNumberFormatException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -76,11 +77,17 @@ public class CheckValidation {
         }
     }
 
+
+
+
     public boolean isJpgImage(byte[] bytes) {
         // Check the first few bytes of the decoded content to determine if it's a JPEG image
         return (bytes.length >= 2 && bytes[0] == (byte) 0xFF && bytes[1] == (byte) 0xD8);
     }
-
+public boolean isJpgImage(String path){
+    String[] pathSplitter = path.split("\\.");
+    return pathSplitter[pathSplitter.length - 1].equals("jpg");
+}
 
     public boolean isImageHaveValidSize(byte[] bytes) {
         return bytes.length <= 300000;

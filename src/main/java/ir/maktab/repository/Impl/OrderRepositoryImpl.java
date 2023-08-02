@@ -32,12 +32,12 @@ public class OrderRepositoryImpl extends BaseRepositoryImpl<Orders,Long>
     public Collection<Orders> showOrdersToSpecialist(SubDuty subDuty ) {
        // String hql="select o from Orders o where o.subDuty=:subDuty and o.orderStatus=:orderStatusٌWaitingForSuggest or  o.orderStatus=:orderStatusWaitingForSelect";
         String hql = "select o from Orders o where o.subDuty = :subDuty and (o.orderStatus = :orderStatusWaitingForSuggest or o.orderStatus = :orderStatusWaitingForSelect)";
-        OrderStatus orderStatusٌWaitingForSuggest=OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION;
+        OrderStatus orderStatusWaitingForSuggest=OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION;
         OrderStatus orderStatusWaitingForSelect=OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SELECTION;
 
        return session.createQuery(hql,Orders.class)
                 .setParameter("subDuty",subDuty)
-               .setParameter("orderStatusٌWaitingForSuggest",orderStatusٌWaitingForSuggest)
+               .setParameter("orderStatusWaitingForSuggest",orderStatusWaitingForSuggest)
                .setParameter("orderStatusWaitingForSelect",orderStatusWaitingForSelect)
                 .getResultList();
 

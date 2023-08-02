@@ -11,6 +11,6 @@ public interface SpecialistService  {
     void confirmSpecialistByAdmin();
     Boolean addSpecialistToSubDuty(Specialist specialist, SubDuty subDuty);
     boolean changePassword(String email,String oldPassword,String newPassword);
-
+    void removeSpecialistFromDuty();
     String encryptSpecialistPassword(String password);
 }

@@ -24,6 +24,8 @@ public class Orders extends BaseEntity<Long> {
     @ManyToOne
     Customer customer;
     @ManyToOne
+    Specialist specialist;
+    @ManyToOne
     SubDuty subDuty;
     @NotNull(message = "this field must be have value")
     @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
@@ -36,7 +38,6 @@ public class Orders extends BaseEntity<Long> {
     LocalDate DateOfWork;
     @NotNull(message = "this field must be have value")
     LocalTime timeOfWork;
-//    @NotNull(message = "this field must be have value")
     @OneToOne
     Address address;
     @Enumerated(EnumType.STRING)

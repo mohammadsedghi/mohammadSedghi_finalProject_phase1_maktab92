@@ -11,5 +11,6 @@ public interface SpecialistRepository extends BaseRepository<Specialist,Long> {
     Optional<Specialist> findByEmail(String email);
     Optional<Specialist> findByEmailAndPassword(String email,String password);
 Collection<Specialist> showUnConfirmSpecialist();
+Collection<Specialist> showConfirmSpecialist();
 
 }

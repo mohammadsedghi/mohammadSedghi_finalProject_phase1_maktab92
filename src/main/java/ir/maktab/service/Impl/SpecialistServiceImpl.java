@@ -2,6 +2,7 @@ package ir.maktab.service.Impl;
 
 
 
+import ir.maktab.entity.Duty;
 import ir.maktab.entity.Specialist;
 import ir.maktab.entity.SubDuty;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
@@ -10,6 +11,7 @@ import ir.maktab.repository.SpecialistRepository;
 import ir.maktab.service.SpecialistService;
 import ir.maktab.util.Menu;
 import ir.maktab.util.custom_exception.CustomInputOutputException;
+import ir.maktab.util.custom_exception.CustomNumberFormatException;
 import ir.maktab.util.hash_password.EncryptPassword;
 import ir.maktab.util.validation.CheckValidation;
 import ir.maktab.util.custom_exception.CustomException;
@@ -143,7 +145,8 @@ public class SpecialistServiceImpl  implements SpecialistService {
     }
 
     public String convertImageToImageData(String imagePath) throws CustomInputOutputException {
-    try {
+    try { if (!checkValidation.isJpgImage(imagePath))throw new CustomInputOutputException("image file format is not valid121212");
+
         byte[] fileContent = FileUtils.readFileToByteArray(new File(imagePath));
     if (!checkValidation.isJpgImage(fileContent))throw new CustomInputOutputException("image file format is not valid");
    if(!checkValidation.isImageHaveValidSize(fileContent)){throw new CustomInputOutputException("image size must be lower than 300KB");}
@@ -216,6 +219,34 @@ public class SpecialistServiceImpl  implements SpecialistService {
         }
         return true;
 
+    }
+
+
+
+    @Override
+    public void removeSpecialistFromDuty() {
+        Scanner scanner=new Scanner(System.in);
+        Set<Specialist> confirmSpecialist=new HashSet<>(specialistRepository.showConfirmSpecialist());
+        if(confirmSpecialist.size()==0){
+            System.out.println("no specialist unConfirm found");
+        }else{
+            for (Specialist specialist:confirmSpecialist
+            ) {
+                System.out.println(specialist);
+                System.out.println("1)unConfirm(remove) this specialist 2)no");
+                if(scanner.nextInt()==1){
+                    specialist.setStatus(SpecialistRegisterStatus.WAITING_FOR_CONFIRM);
+                    Transaction transaction= session.getTransaction();
+                    try {
+                        transaction.begin();
+                        specialistRepository.update(specialist);
+                        transaction.commit();
+                    } catch (TransactionException e) {
+                        transaction.rollback();
+                    }
+                }
+            }
+        }
     }
 
     @Override
