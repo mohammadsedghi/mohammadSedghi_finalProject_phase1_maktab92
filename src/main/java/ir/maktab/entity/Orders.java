@@ -27,16 +27,15 @@ public class Orders extends BaseEntity<Long> {
     Specialist specialist;
     @ManyToOne
     SubDuty subDuty;
-    @NotNull(message = "this field must be have value")
-    @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
+    @NotNull(message = "proposedPrice must be have value")
+//    @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
     Double proposedPrice;
-    @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
-    @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
-    @NotNull(message = "this field must be have value")
+    @Pattern(message = "description must be just letters",regexp = "^[a-zA-Z]+$")
+    @NotNull(message = "description must be have value")
     String description;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "DateOfWork must be have value")
     LocalDate DateOfWork;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "timeOfWork must be have value")
     LocalTime timeOfWork;
     @OneToOne
     Address address;

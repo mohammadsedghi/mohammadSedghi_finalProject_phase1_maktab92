@@ -6,7 +6,7 @@ import ir.maktab.entity.SubDuty;
 import ir.maktab.repository.Impl.SubDutyRepositoryImpl;
 import ir.maktab.repository.SubDutyRepository;
 import ir.maktab.service.SubDutyService;
-import ir.maktab.util.Menu;
+import ir.maktab.veiw.Menu;
 import ir.maktab.util.custom_exception.CustomException;
 import ir.maktab.util.custom_exception.CustomNumberFormatException;
 import ir.maktab.util.validation.CheckValidation;

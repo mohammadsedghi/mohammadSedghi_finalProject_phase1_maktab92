@@ -18,18 +18,18 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Address extends BaseEntity<Long> {
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "province must be have value")
     @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
     String province;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "city must be have value")
     @Pattern(message = "city must be just letters",regexp = "^[a-zA-Z]+$")
     String city;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "street must be have value")
     @Pattern(message = "street must be just letters",regexp = "^[a-zA-Z]+$")
     String street;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "postalCode must be have value")
     @Pattern(message = "postalCode must be just digit",regexp ="^\\d+$")
     String postalCode;
-
+    @NotNull(message = "postalCode must be have value")
     Integer houseNumber;
 }

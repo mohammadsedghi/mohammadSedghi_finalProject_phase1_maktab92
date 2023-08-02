@@ -5,7 +5,7 @@ import ir.maktab.entity.Customer;
 import ir.maktab.repository.CustomerRepository;
 import ir.maktab.repository.Impl.CustomerRepositoryImpl;
 import ir.maktab.service.CustomerService;
-import ir.maktab.util.Menu;
+import ir.maktab.veiw.Menu;
 import ir.maktab.util.custom_exception.CustomException;
 import ir.maktab.util.custom_exception.CustomNoResultException;
 import ir.maktab.util.hash_password.EncryptPassword;

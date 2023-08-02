@@ -1,15 +1,6 @@
 package ir.maktab;
 
-import ir.maktab.base.repository.util.HibernateUtil;
-import ir.maktab.entity.Admin;
-import ir.maktab.repository.AdminRepository;
-import ir.maktab.repository.Impl.AdminRepositoryImpl;
-import ir.maktab.service.Impl.AdminServiceImpl;
-import ir.maktab.util.Menu;
-import org.hibernate.Session;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
+import ir.maktab.veiw.Menu;
 
 public class Main {
     public static void main(String[] args){

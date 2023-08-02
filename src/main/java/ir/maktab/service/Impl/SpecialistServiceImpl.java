@@ -2,16 +2,14 @@ package ir.maktab.service.Impl;
 
 
 
-import ir.maktab.entity.Duty;
 import ir.maktab.entity.Specialist;
 import ir.maktab.entity.SubDuty;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
 import ir.maktab.repository.Impl.SpecialistRepositoryImpl;
 import ir.maktab.repository.SpecialistRepository;
 import ir.maktab.service.SpecialistService;
-import ir.maktab.util.Menu;
+import ir.maktab.veiw.Menu;
 import ir.maktab.util.custom_exception.CustomInputOutputException;
-import ir.maktab.util.custom_exception.CustomNumberFormatException;
 import ir.maktab.util.hash_password.EncryptPassword;
 import ir.maktab.util.validation.CheckValidation;
 import ir.maktab.util.custom_exception.CustomException;
@@ -145,7 +143,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
     }
 
     public String convertImageToImageData(String imagePath) throws CustomInputOutputException {
-    try { if (!checkValidation.isJpgImage(imagePath))throw new CustomInputOutputException("image file format is not valid121212");
+    try { if (!checkValidation.isJpgImage(imagePath))throw new CustomInputOutputException("image file format is not valid with prefix without jpg");
 
         byte[] fileContent = FileUtils.readFileToByteArray(new File(imagePath));
     if (!checkValidation.isJpgImage(fileContent))throw new CustomInputOutputException("image file format is not valid");

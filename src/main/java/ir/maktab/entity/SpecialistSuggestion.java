@@ -30,14 +30,14 @@ public class SpecialistSuggestion extends BaseEntity<Long> {
 //    Set<Orders> orders;
     @ManyToOne
     Orders order;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "DateOfSuggestion must be have value")
     LocalDate DateOfSuggestion;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "TimeOfSuggestion must be have value")
     LocalTime TimeOfSuggestion;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "proposedPrice must be have value")
     Double proposedPrice;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "TimeOfStartWork must be have value")
     LocalTime TimeOfStartWork;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "durationOfWorkPerHour must be have value")
     Integer durationOfWorkPerHour;
 }

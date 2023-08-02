@@ -15,8 +15,8 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Wallet extends BaseEntity<Long> {
-    @NotNull(message = "this field must be have value")
-    @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
-    Double credit;
+    @NotNull(message = "Balance of wallet must be have value")
+    @Pattern(message = "Balance of wallet must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
+    Double Balance;
 
 }

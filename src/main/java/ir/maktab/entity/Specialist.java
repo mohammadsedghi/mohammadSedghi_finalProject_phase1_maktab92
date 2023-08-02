@@ -32,7 +32,7 @@ public class Specialist extends Person {
     Wallet wallet;
     @Enumerated(EnumType.STRING)
     SpecialistRegisterStatus status;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "score must be have value")
     Integer score;
     @Column(name = "image_data", columnDefinition = "TEXT")
    String imageData;

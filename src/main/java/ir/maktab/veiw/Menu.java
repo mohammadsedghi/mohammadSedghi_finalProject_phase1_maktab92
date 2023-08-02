@@ -1,10 +1,11 @@
-package ir.maktab.util;
+package ir.maktab.veiw;
 
 import ir.maktab.base.repository.util.HibernateUtil;
 import ir.maktab.entity.*;
 import ir.maktab.entity.enumeration.OrderStatus;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
 import ir.maktab.service.Impl.*;
+import ir.maktab.util.CalenderAndValidation;
 import ir.maktab.util.custom_exception.CustomException;
 import ir.maktab.util.custom_exception.CustomInputOutputException;
 import ir.maktab.util.custom_exception.CustomNoResultException;
@@ -570,6 +571,7 @@ public class Menu {
                                 Address address = setAddressCustomer();
                                 System.out.println("inter proposed price");
                                 double proposedPrice = scanner.nextDouble();
+                                proposedPrice+=subDuty.getBasePrice();
                                 System.out.println("write description of order");
                                 String description = scanner.next();
                                 Orders orders = Orders.builder()
@@ -579,7 +581,7 @@ public class Menu {
                                         .address(addressService.createAddress(address))
                                         .DateOfWork(LocalDate.now())
                                         .timeOfWork(LocalTime.now())
-                                        .proposedPrice(subDuty.getBasePrice() + proposedPrice)
+                                        .proposedPrice(proposedPrice)
                                         .orderStatus(OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION)
                                         .build();
                                 orderService.submitOrder(orders);

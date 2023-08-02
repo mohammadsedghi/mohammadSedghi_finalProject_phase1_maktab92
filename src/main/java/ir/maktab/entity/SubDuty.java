@@ -20,11 +20,11 @@ import org.hibernate.validator.constraints.Length;
 public class SubDuty extends BaseEntity<Long> {
     @ManyToOne
     Duty duty;
-    @NotNull(message = "this field must be have value")
-    @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
-    @Length(message ="lastName must be 100 character",max = 100)
+    @NotNull(message = "name must be have value")
+    @Pattern(message = "name must be just letters",regexp = "^[a-zA-Z]+$")
+    @Length(message ="name must be 100 character",max = 100)
     String name;
-    @NotNull(message = "this field must be have value")
+    @NotNull(message = "basePrice of SubDuty must be have value")
    // @Pattern(message = "basePrice must be have positive value",regexp = "^[+]?\\d+([.]\\d+)?$")
     Double basePrice;
     @NotNull(message = "this field must be have value")

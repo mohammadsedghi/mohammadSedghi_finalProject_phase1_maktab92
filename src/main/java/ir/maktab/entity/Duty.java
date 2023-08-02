@@ -20,9 +20,9 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Duty extends BaseEntity<Long> {
 
-    @Length(message ="name of services must be 100 character",max = 100)
-    @NotNull(message = "this field must be have value")
-    @Pattern(message = "province must be just letters",regexp = "^[a-zA-Z]+$")
+    @Length(message ="name of duty must be 100 character",max = 100)
+    @NotNull(message = "name must of duty be have value")
+    @Pattern(message = "name must be just letters",regexp = "^[a-zA-Z]+$")
     String name;
     @OneToMany(mappedBy = "duty")
     Set<SubDuty> subDuties;

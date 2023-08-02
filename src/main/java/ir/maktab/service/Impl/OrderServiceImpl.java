@@ -7,9 +7,13 @@ import ir.maktab.entity.enumeration.OrderStatus;
 import ir.maktab.repository.Impl.OrderRepositoryImpl;
 import ir.maktab.repository.OrderRepository;
 import ir.maktab.service.OrderService;
+import ir.maktab.veiw.Menu;
+import ir.maktab.util.custom_exception.CustomException;
+import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -58,15 +62,24 @@ private OrderRepository orderRepository;
 
     @Override
     public Orders submitOrder(Orders orders) {
-
+        CheckValidation checkValidation=new CheckValidation();
+        Menu menu=new Menu();
         try {
-            transaction.begin();
-            orderRepository.save(orders);
-            transaction.commit();
-        } catch (TransactionException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (!checkValidation.isValid(orders)){
+                throw new CustomException("input for orders is invalid");}
+                try {
+                    transaction.begin();
+                    orderRepository.save(orders);
+                    transaction.commit();
+                } catch (TransactionException e) {
+                    if (transaction != null) {
+                        transaction.rollback();
+                    }
+                }
+
+        }catch (CustomException e) {
+            System.out.println(e.getMessage());
+          menu.submitOrders();
         }
         return orders;
     }
