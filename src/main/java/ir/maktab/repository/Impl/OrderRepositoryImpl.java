@@ -1,12 +1,16 @@
 package ir.maktab.repository.Impl;
 
 import ir.maktab.base.repository.BaseRepositoryImpl;
+import ir.maktab.entity.Customer;
 import ir.maktab.entity.Orders;
+import ir.maktab.entity.Specialist;
 import ir.maktab.entity.SubDuty;
 import ir.maktab.entity.enumeration.OrderStatus;
 import ir.maktab.repository.OrderRepository;
+import jakarta.persistence.NoResultException;
 import org.hibernate.Session;
 import java.util.Collection;
+import java.util.Optional;
 
 
 public class OrderRepositoryImpl extends BaseRepositoryImpl<Orders,Long>
@@ -41,5 +45,18 @@ public class OrderRepositoryImpl extends BaseRepositoryImpl<Orders,Long>
                .setParameter("orderStatusWaitingForSelect",orderStatusWaitingForSelect)
                 .getResultList();
 
+    }
+
+    @Override
+    public Optional<Orders> findOrdersWithThisCustomerAndSubDuty(Customer customer, SubDuty subDuty) {
+        String hql="select o from Orders o where o.customer=:customer and o.subDuty=:subDuty";
+        try {
+            return Optional.ofNullable(session.createQuery(hql, Orders.class)
+                    .setParameter("customer", customer)
+                    .setParameter("subDuty", subDuty)
+                    .getSingleResult());
+        }catch (NoResultException e){
+            return Optional.empty();
+        }
     }
 }

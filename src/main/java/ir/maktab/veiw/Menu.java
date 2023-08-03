@@ -578,6 +578,7 @@ public class Menu {
                         System.out.println("1)select  2)another subDuty");
                         switch (scanner.nextInt()) {
                             case 1 -> {
+                                orderService.findOrdersWithThisCustomerAndSubDuty(CheckValidation.memberTypeCustomer,subDuty);
                                 Address address = setAddressCustomer();
                                 System.out.println("inter proposed price(please notice that this price value add with" +
                                         "sub duty price ");
