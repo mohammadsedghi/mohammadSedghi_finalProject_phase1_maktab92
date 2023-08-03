@@ -85,7 +85,7 @@ public class SpecialistServiceImpl  implements SpecialistService {
                             transaction.rollback();
                         }
                     });
-        }catch (CustomNoResultException c){
+        }catch (CustomException c){
             System.out.println(c.getMessage());
         }
         return specialist;

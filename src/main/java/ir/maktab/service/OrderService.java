@@ -18,4 +18,10 @@ public interface OrderService {
     Collection<Orders> showOrdersToSpecialist(SubDuty subDuty );
     Orders updateOrderToNextLevel(Orders orders, OrderStatus orderStatus);
    void findOrdersWithThisCustomerAndSubDuty(Customer customer, SubDuty subDuty) ;
+    Collection<Orders> findOrdersInStatusWaitingForSpecialistSuggestion(Customer customer);
+    Collection<Orders> findOrdersInStatusWaitingForSpecialistSelection(Customer customer);
+    Collection<Orders> findOrdersInStatusWaitingForSpecialistToWorkplace(Customer customer);
+    Collection<Orders> findOrdersInStatusStarted(Customer customer);
+    Collection<Orders> findOrdersInStatusPaid(Customer customer);
+    Collection<Orders> findOrdersInStatusDone(Customer customer);
 }

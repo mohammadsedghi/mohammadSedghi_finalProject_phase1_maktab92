@@ -13,4 +13,10 @@ import java.util.Set;
 public interface OrderRepository extends BaseRepository<Orders,Long> {
     Collection<Orders> showOrdersToSpecialist(SubDuty subDuty );
     Optional<Orders> findOrdersWithThisCustomerAndSubDuty(Customer customer,SubDuty subDuty);
+    Collection<Orders> findOrdersInStatusWaitingForSpecialistSuggestion(Customer customer);
+    Collection<Orders> findOrdersInStatusWaitingForSpecialistSelection(Customer customer);
+    Collection<Orders> findOrdersInStatusWaitingForSpecialistToWorkplace(Customer customer);
+    Collection<Orders> findOrdersInStatusStarted(Customer customer);
+    Collection<Orders> findOrdersInStatusPaid(Customer customer);
+    Collection<Orders> findOrdersInStatusDone(Customer customer);
 }

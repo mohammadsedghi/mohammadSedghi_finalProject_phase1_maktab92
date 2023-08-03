@@ -152,7 +152,7 @@ public class Menu {
                     System.out.println("imagePath");
                     String imagePath = scanner.next();
                     Set<Duty> Duties = new HashSet<>(dutyService.load());
-                    Duty selectedDuty = new Duty();
+                    Duty selectedDuty ;
                     for (Duty candidateDuty : Duties
                     ) {
                         System.out.println(candidateDuty);
@@ -505,9 +505,9 @@ public class Menu {
         String password = scanner.next();
         Customer customer = Customer.builder()
                 .firstName(firstName)
-                .Lastname(lastName)
+                .lastname(lastName)
                 .nationalId(nationalId)
-                .Email(email)
+                .email(email)
                 .password(password)
                 .registerDate(LocalDate.now())
                 .registerTime(LocalTime.now())

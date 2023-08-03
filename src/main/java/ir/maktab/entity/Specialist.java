@@ -50,7 +50,7 @@ public class Specialist extends Person {
                 ", registerTime=" + registerTime +
                 "} ";
     }
-
+@Builder
     public Specialist(@NotNull(message = "firstName must be have value")
                       @Length(message = "firstName must be 100 character", max = 100)
                       @Pattern(message = "firstName must be just letters", regexp = "^[a-zA-Z]+$") String firstName,

@@ -34,7 +34,6 @@ public class OrderRepositoryImpl extends BaseRepositoryImpl<Orders,Long>
 
     @Override
     public Collection<Orders> showOrdersToSpecialist(SubDuty subDuty ) {
-       // String hql="select o from Orders o where o.subDuty=:subDuty and o.orderStatus=:orderStatusٌWaitingForSuggest or  o.orderStatus=:orderStatusWaitingForSelect";
         String hql = "select o from Orders o where o.subDuty = :subDuty and (o.orderStatus = :orderStatusWaitingForSuggest or o.orderStatus = :orderStatusWaitingForSelect)";
         OrderStatus orderStatusWaitingForSuggest=OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION;
         OrderStatus orderStatusWaitingForSelect=OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SELECTION;
@@ -49,14 +48,75 @@ public class OrderRepositoryImpl extends BaseRepositoryImpl<Orders,Long>
 
     @Override
     public Optional<Orders> findOrdersWithThisCustomerAndSubDuty(Customer customer, SubDuty subDuty) {
-        String hql="select o from Orders o where o.customer=:customer and o.subDuty=:subDuty";
+        String hql="select o from Orders o where o.customer=:customer and o.subDuty=:subDuty and o.orderStatus !=:orderStatus";
+        OrderStatus orderStatusDone=OrderStatus.ORDER_DONE;
         try {
             return Optional.ofNullable(session.createQuery(hql, Orders.class)
                     .setParameter("customer", customer)
                     .setParameter("subDuty", subDuty)
+                    .setParameter("orderStatus", orderStatusDone)
                     .getSingleResult());
         }catch (NoResultException e){
             return Optional.empty();
         }
+    }
+    @Override
+    public Collection<Orders> findOrdersInStatusWaitingForSpecialistSuggestion(Customer customer) {
+        String hql="select o from Orders o where o.customer=:customer and o.orderStatus =:orderStatus";
+        OrderStatus orderStatus=OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION;
+            return session.createQuery(hql, Orders.class)
+                    .setParameter("customer", customer)
+                    .setParameter("orderStatus", orderStatus)
+                    .getResultList();
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusWaitingForSpecialistSelection(Customer customer) {
+        String hql="select o from Orders o where o.customer=:customer and o.orderStatus =:orderStatus";
+        OrderStatus orderStatus=OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SELECTION;
+        return session.createQuery(hql, Orders.class)
+                .setParameter("customer", customer)
+                .setParameter("orderStatus", orderStatus)
+                .getResultList();
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusWaitingForSpecialistToWorkplace(Customer customer) {
+        String hql="select o from Orders o where o.customer=:customer and o.orderStatus =:orderStatus";
+        OrderStatus orderStatus=OrderStatus.ORDER_WAITING_FOR_SPECIALIST_TO_WORKPLACE;
+        return session.createQuery(hql, Orders.class)
+                .setParameter("customer", customer)
+                .setParameter("orderStatus", orderStatus)
+                .getResultList();
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusStarted(Customer customer) {
+        String hql="select o from Orders o where o.customer=:customer and o.orderStatus =:orderStatus";
+        OrderStatus orderStatus=OrderStatus.ORDER_STARTED;
+        return session.createQuery(hql, Orders.class)
+                .setParameter("customer", customer)
+                .setParameter("orderStatus", orderStatus)
+                .getResultList();
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusPaid(Customer customer) {
+        String hql="select o from Orders o where o.customer=:customer and o.orderStatus =:orderStatus";
+        OrderStatus orderStatus=OrderStatus.ORDER_PAID;
+        return session.createQuery(hql, Orders.class)
+                .setParameter("customer", customer)
+                .setParameter("orderStatus", orderStatus)
+                .getResultList();
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusDone(Customer customer) {
+        String hql="select o from Orders o where o.customer=:customer and o.orderStatus =:orderStatus";
+        OrderStatus orderStatus=OrderStatus.ORDER_DONE;
+        return session.createQuery(hql, Orders.class)
+                .setParameter("customer", customer)
+                .setParameter("orderStatus", orderStatus)
+                .getResultList();
     }
 }

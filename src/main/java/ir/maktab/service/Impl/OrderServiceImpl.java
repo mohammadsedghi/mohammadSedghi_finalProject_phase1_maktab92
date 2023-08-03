@@ -52,6 +52,36 @@ public class OrderServiceImpl implements OrderService {
                 });
     }
 
+    @Override
+    public Collection<Orders> findOrdersInStatusWaitingForSpecialistSuggestion(Customer customer) {
+        return orderRepository.findOrdersInStatusWaitingForSpecialistSuggestion(customer);
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusWaitingForSpecialistSelection(Customer customer) {
+        return orderRepository.findOrdersInStatusWaitingForSpecialistSelection(customer);
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusWaitingForSpecialistToWorkplace(Customer customer) {
+        return orderRepository.findOrdersInStatusWaitingForSpecialistToWorkplace(customer);
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusStarted(Customer customer) {
+        return orderRepository.findOrdersInStatusStarted(customer);
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusPaid(Customer customer) {
+        return orderRepository.findOrdersInStatusPaid(customer);
+    }
+
+    @Override
+    public Collection<Orders> findOrdersInStatusDone(Customer customer) {
+        return orderRepository.findOrdersInStatusDone(customer);
+    }
+
 
     public Orders remove(Orders orders) {
         try {
