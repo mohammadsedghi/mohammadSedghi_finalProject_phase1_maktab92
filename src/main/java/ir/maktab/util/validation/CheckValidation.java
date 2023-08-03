@@ -3,7 +3,7 @@ package ir.maktab.util.validation;
 import ir.maktab.entity.Admin;
 import ir.maktab.entity.Customer;
 import ir.maktab.entity.Specialist;
-import ir.maktab.util.custom_exception.CustomException;
+import ir.maktab.custom_exception.CustomException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

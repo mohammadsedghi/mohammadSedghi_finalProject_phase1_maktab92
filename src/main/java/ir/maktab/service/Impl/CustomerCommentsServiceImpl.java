@@ -12,6 +12,11 @@ import org.hibernate.TransactionException;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * this class design for CustomerComments instance and all thing that related with CustomerComments.
+ *  * Crud method is implemented
+ *  * and other required method that CustomerCommentsRepository to occur something(read,write)in database
+ */
 public class CustomerCommentsServiceImpl implements CustomerCommentsService {
    private CustomerCommentsRepository customerCommentsRepository;
    private Session session;
@@ -33,9 +38,6 @@ Transaction transaction;
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            customerCommentsRepository.getSession().close();
-
         }
         return customerComments;
     }
@@ -50,9 +52,6 @@ Transaction transaction;
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            customerCommentsRepository.getSession().close();
-
         }
         return customerComments;
     }
@@ -67,9 +66,6 @@ Transaction transaction;
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            customerCommentsRepository.getSession().close();
-
         }
         return customerComments;
     }

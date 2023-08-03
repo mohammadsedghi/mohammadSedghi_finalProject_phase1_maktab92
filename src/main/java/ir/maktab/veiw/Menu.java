@@ -6,9 +6,9 @@ import ir.maktab.entity.enumeration.OrderStatus;
 import ir.maktab.entity.enumeration.SpecialistRegisterStatus;
 import ir.maktab.service.Impl.*;
 import ir.maktab.util.CalenderAndValidation;
-import ir.maktab.util.custom_exception.CustomException;
-import ir.maktab.util.custom_exception.CustomInputOutputException;
-import ir.maktab.util.custom_exception.CustomNoResultException;
+import ir.maktab.custom_exception.CustomException;
+import ir.maktab.custom_exception.CustomInputOutputException;
+import ir.maktab.custom_exception.CustomNoResultException;
 import ir.maktab.util.validation.CheckValidation;
 import ir.maktab.util.validation.CustomRegex;
 import org.hibernate.Session;
@@ -18,18 +18,24 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
+/**
+ * Main class designed for test all method that exist in all service of all entity
+ * this class have method that show other service and method is how to work(Menu)
+ * this program written with java language programming and jdk 19.
+ * written in 8/4/2023 . programmer mohammad sedghi...
+ */
 public class Menu {
     Scanner scanner = new Scanner(System.in);
     Session session = HibernateUtil.getSessionFactory().openSession();
-    CustomerServiceImpl customerService = new CustomerServiceImpl(session);
-    AdminServiceImpl adminService = new AdminServiceImpl(session);
-    SpecialistServiceImpl specialistService = new SpecialistServiceImpl(session);
-    DutyServiceImpl dutyService = new DutyServiceImpl(session);
-    SubDutyServiceImpl subDutyService = new SubDutyServiceImpl(session);
-    WalletServiceImpl walletService = new WalletServiceImpl(session);
-    AddressServiceImpl addressService = new AddressServiceImpl(session);
-    OrderServiceImpl orderService = new OrderServiceImpl(session);
-    SpecialistSuggestionServiceImpl specialistSuggestionService = new SpecialistSuggestionServiceImpl(session);
+   private CustomerServiceImpl customerService = new CustomerServiceImpl(session);
+    private AdminServiceImpl adminService = new AdminServiceImpl(session);
+    private SpecialistServiceImpl specialistService = new SpecialistServiceImpl(session);
+    private DutyServiceImpl dutyService = new DutyServiceImpl(session);
+    private SubDutyServiceImpl subDutyService = new SubDutyServiceImpl(session);
+    private   WalletServiceImpl walletService = new WalletServiceImpl(session);
+    private AddressServiceImpl addressService = new AddressServiceImpl(session);
+    private  OrderServiceImpl orderService = new OrderServiceImpl(session);
+    private SpecialistSuggestionServiceImpl specialistSuggestionService = new SpecialistSuggestionServiceImpl(session);
     // String imagePath = "src/main/java/ir/maktab/util/images/2.jpg";
 
     public void firstMenu() {
@@ -152,7 +158,7 @@ public class Menu {
                     System.out.println("imagePath");
                     String imagePath = scanner.next();
                     Set<Duty> Duties = new HashSet<>(dutyService.load());
-                    Duty selectedDuty ;
+                    Duty selectedDuty;
                     for (Duty candidateDuty : Duties
                     ) {
                         System.out.println(candidateDuty);
@@ -289,8 +295,7 @@ public class Menu {
                         }
                     }
                 }
-                case 9->
-                    specialistService.removeSpecialistFromDuty();
+                case 9 -> specialistService.removeSpecialistFromDuty();
                 case 10 -> {
                     try {
                         dutyService.load().forEach(duty -> {
@@ -419,9 +424,11 @@ public class Menu {
                     } else {
                         for (Orders order : ordersSet) {
                             System.out.println(order);
+                            System.out.println("--------------------------------------");
                             System.out.println("1)select  2)another order");
                             switch (scanner.nextInt()) {
                                 case 1 -> {
+                                    specialistSuggestionService.findSuggestWithThisSpecialistAndOrder(CheckValidation.memberTypespecialist, order);
                                     System.out.println("inter proposed price");
                                     double proposedPrice = scanner.nextDouble();
                                     System.out.println("inter workTime PerHour");
@@ -522,6 +529,9 @@ public class Menu {
         System.out.println("1)login");
         System.out.println("2)signup");
         System.out.println("3)submit order");
+        System.out.println("4)Show find Orders In Status Waiting For Specialist Suggestion");
+        System.out.println("5)Show find Orders In Status Waiting For Specialist Selection");
+
     }
 
     public void runCustomerMenu() {
@@ -531,12 +541,18 @@ public class Menu {
                 case 1 -> logIn();
                 case 2 -> customerSignup();
                 case 3 -> submitOrders();
+                case 4 ->
+                        orderService.findOrdersInStatusWaitingForSpecialistSuggestion(CheckValidation.memberTypeCustomer).
+                                forEach(System.out::println);
+                case 5 ->
+                        orderService.findOrdersInStatusWaitingForSpecialistSelection(CheckValidation.memberTypeCustomer).
+                                forEach(System.out::println);
             }
         }
     }
 
     public Address setAddressCustomer() {
-        CustomRegex customRegex=new CustomRegex();
+        CustomRegex customRegex = new CustomRegex();
         System.out.println("inter province");
         String province = scanner.next();
         System.out.println("inter city");
@@ -550,18 +566,20 @@ public class Menu {
         try {
             if (!customRegex.checkOneInputIsValid(houseNumber, customRegex.getValidPrice())) {
                 throw new CustomException("house number must have positive number");
-            }else { return Address.builder()
-                    .province(province)
-                    .city(city)
-                    .street(street)
-                    .postalCode(postalCode)
-                    .houseNumber(Integer.parseInt(houseNumber))
-                    .build();}
-        }catch (CustomException ce){
+            } else {
+                return Address.builder()
+                        .province(province)
+                        .city(city)
+                        .street(street)
+                        .postalCode(postalCode)
+                        .houseNumber(Integer.parseInt(houseNumber))
+                        .build();
+            }
+        } catch (CustomException ce) {
             System.out.println(ce.getMessage());
 
         }
-       return new Address();
+        return new Address();
     }
 
     public void submitOrders() {
@@ -578,7 +596,7 @@ public class Menu {
                         System.out.println("1)select  2)another subDuty");
                         switch (scanner.nextInt()) {
                             case 1 -> {
-                                orderService.findOrdersWithThisCustomerAndSubDuty(CheckValidation.memberTypeCustomer,subDuty);
+                                orderService.findOrdersWithThisCustomerAndSubDuty(CheckValidation.memberTypeCustomer, subDuty);
                                 Address address = setAddressCustomer();
                                 System.out.println("inter proposed price(please notice that this price value add with" +
                                         "sub duty price ");
@@ -594,7 +612,7 @@ public class Menu {
                                         .timeOfWork(LocalTime.now())
                                         .orderStatus(OrderStatus.ORDER_WAITING_FOR_SPECIALIST_SUGGESTION)
                                         .build();
-                                orderService.submitOrder(orders,proposedPrice,String.valueOf(subDuty.getBasePrice()));
+                                orderService.submitOrder(orders, proposedPrice, String.valueOf(subDuty.getBasePrice()));
                                 System.out.println("---------------------------------------------------");
                             }
                             case 2 -> System.out.println();

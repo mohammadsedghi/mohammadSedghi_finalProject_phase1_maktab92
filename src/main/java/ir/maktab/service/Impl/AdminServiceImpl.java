@@ -5,13 +5,18 @@ import ir.maktab.repository.AdminRepository;
 import ir.maktab.repository.Impl.AdminRepositoryImpl;
 import ir.maktab.service.AdminService;
 import ir.maktab.veiw.Menu;
-import ir.maktab.util.custom_exception.CustomNoResultException;
+import ir.maktab.custom_exception.CustomNoResultException;
 import ir.maktab.util.hash_password.EncryptPassword;
 import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
 
 import java.util.Optional;
 
+/**
+ * this class design for Admin instance and all thing that related with Admin.
+ *  * Create Admin method is implemented
+ *  * and other required method that use AdminRepository to occur something(read,write)in database
+ */
 public class AdminServiceImpl implements AdminService {
     CheckValidation checkValidation=new CheckValidation();
     private final Session session;

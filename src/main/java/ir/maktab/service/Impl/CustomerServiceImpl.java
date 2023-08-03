@@ -1,13 +1,14 @@
 package ir.maktab.service.Impl;
 
 
+import ir.maktab.custom_exception.CustomNoSuchAlgorithmException;
 import ir.maktab.entity.Customer;
 import ir.maktab.repository.CustomerRepository;
 import ir.maktab.repository.Impl.CustomerRepositoryImpl;
 import ir.maktab.service.CustomerService;
 import ir.maktab.veiw.Menu;
-import ir.maktab.util.custom_exception.CustomException;
-import ir.maktab.util.custom_exception.CustomNoResultException;
+import ir.maktab.custom_exception.CustomException;
+import ir.maktab.custom_exception.CustomNoResultException;
 import ir.maktab.util.hash_password.EncryptPassword;
 import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
@@ -17,8 +18,12 @@ import java.util.Collection;
 import java.util.Optional;
 
 
-
-
+/**
+ * this class design for Customer instance and all thing that related with Customer.
+ *  *  * Crud method is implemented
+ *  *  * and other required method that CustomerRepository to occur something(read,write)in database
+ *
+ */
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final Session session;
@@ -143,7 +148,7 @@ CheckValidation checkValidation=new CheckValidation();
     }
 
     @Override
-    public String encryptCustomerPassword(String password) {
+    public String encryptCustomerPassword(String password)  {
         EncryptPassword encryptPassword=new EncryptPassword();
         return encryptPassword.hashPassword(password);
     }

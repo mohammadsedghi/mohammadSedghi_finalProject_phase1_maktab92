@@ -1,6 +1,6 @@
 package ir.maktab.util;
 
-import ir.maktab.util.custom_exception.CustomException;
+import ir.maktab.custom_exception.CustomException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

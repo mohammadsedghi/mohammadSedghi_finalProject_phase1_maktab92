@@ -1,4 +1,4 @@
-package ir.maktab.util.custom_exception;
+package ir.maktab.custom_exception;
 
 public class CustomException extends IllegalArgumentException {
     public CustomException(String s) {

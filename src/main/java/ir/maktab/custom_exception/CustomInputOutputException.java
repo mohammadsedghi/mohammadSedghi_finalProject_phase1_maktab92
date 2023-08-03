@@ -1,4 +1,4 @@
-package ir.maktab.util.custom_exception;
+package ir.maktab.custom_exception;
 
 import java.io.IOException;
 

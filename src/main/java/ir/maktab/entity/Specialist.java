@@ -14,12 +14,12 @@ import java.util.Set;
 
 @Setter
 @Getter
-//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Specialist extends Person {
+    //optional
     @ManyToOne
     Duty duty;
     @ManyToMany

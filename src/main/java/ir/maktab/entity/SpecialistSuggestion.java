@@ -22,12 +22,6 @@ import java.util.Set;
 public class SpecialistSuggestion extends BaseEntity<Long> {
     @ManyToOne
     Specialist specialist;
-//    @ManyToMany
-//    @JoinTable(
-//            name="specialistSuggestion_orders",
-//            joinColumns=@JoinColumn(name="specialistSuggestion_ID", referencedColumnName="id"),
-//            inverseJoinColumns=@JoinColumn(name="orders_ID" , referencedColumnName="id"))
-//    Set<Orders> orders;
     @ManyToOne
     Orders order;
     @NotNull(message = "DateOfSuggestion must be have value")

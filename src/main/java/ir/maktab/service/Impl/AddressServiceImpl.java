@@ -11,6 +11,11 @@ import org.hibernate.Transaction;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * this class design for address instance and all thing that related with address.
+ * Crud method is implemented
+ * and other required method that use addressRepository to occur something(read,write)in database
+ */
 public class AddressServiceImpl implements AddressService {
     private AddressRepository addressRepository;
     private Session session;

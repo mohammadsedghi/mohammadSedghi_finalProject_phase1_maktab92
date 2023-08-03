@@ -12,7 +12,6 @@ import org.hibernate.validator.constraints.Length;
 
 @Setter
 @Getter
-//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

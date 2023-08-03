@@ -9,11 +9,11 @@ import ir.maktab.repository.Impl.SpecialistRepositoryImpl;
 import ir.maktab.repository.SpecialistRepository;
 import ir.maktab.service.SpecialistService;
 import ir.maktab.veiw.Menu;
-import ir.maktab.util.custom_exception.CustomInputOutputException;
+import ir.maktab.custom_exception.CustomInputOutputException;
 import ir.maktab.util.hash_password.EncryptPassword;
 import ir.maktab.util.validation.CheckValidation;
-import ir.maktab.util.custom_exception.CustomException;
-import ir.maktab.util.custom_exception.CustomNoResultException;
+import ir.maktab.custom_exception.CustomException;
+import ir.maktab.custom_exception.CustomNoResultException;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -23,6 +23,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * this class design for work with specialist instance and all thing that related with specialist.
+ *  Crud method is implemented
+ *   and other required method that use specialistRepository to occur something(read,write)in database
+ *
+ */
 public class SpecialistServiceImpl  implements SpecialistService {
     private final Session session;
      SpecialistRepository specialistRepository;
@@ -155,7 +161,8 @@ public class SpecialistServiceImpl  implements SpecialistService {
     }
 
 }
-    public  void convertByteArrayToImage(Specialist specialist,String newFilePath ){
+    public  void convertByteArrayToImage(Specialist specialist,String newFilePath )  {
+
             Optional<Specialist> SpecialistId = specialistRepository.findById(specialist.getId());
             SpecialistId.ifPresentOrElse(member -> {
                         byte[] imageData = Base64.getDecoder().decode(member.getImageData());
@@ -164,8 +171,13 @@ public class SpecialistServiceImpl  implements SpecialistService {
                         } catch (IOException e) {
                             System.out.println(e.getMessage());
                         }
-                    }, Specialist::new
-            );
+                    }, ()-> {
+                try {
+                    throw new CustomInputOutputException("no specialist found");
+                } catch (CustomInputOutputException e) {
+                    System.out.println(e.getMessage());
+                }
+            });
 
     }
     @Override

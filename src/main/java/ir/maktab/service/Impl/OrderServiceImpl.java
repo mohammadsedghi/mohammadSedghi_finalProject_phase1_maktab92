@@ -1,6 +1,7 @@
 package ir.maktab.service.Impl;
 
 
+import ir.maktab.custom_exception.CustomNoResultException;
 import ir.maktab.entity.Customer;
 import ir.maktab.entity.Orders;
 import ir.maktab.entity.SubDuty;
@@ -8,18 +9,26 @@ import ir.maktab.entity.enumeration.OrderStatus;
 import ir.maktab.repository.Impl.OrderRepositoryImpl;
 import ir.maktab.repository.OrderRepository;
 import ir.maktab.service.OrderService;
-import ir.maktab.util.custom_exception.CustomDuplicateInfoException;
+import ir.maktab.custom_exception.CustomDuplicateInfoException;
 import ir.maktab.util.validation.CustomRegex;
 import ir.maktab.veiw.Menu;
-import ir.maktab.util.custom_exception.CustomException;
+import ir.maktab.custom_exception.CustomException;
 import ir.maktab.util.validation.CheckValidation;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.TransactionException;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
+/**
+ * this class design for work with order instance and all thing that related with order.
+ *  * Crud method is implemented
+ *  * and other required method that use orderRepository to occur something(read,write)in database
+ *  *
+ */
 public class OrderServiceImpl implements OrderService {
 
     private final Session session;
@@ -54,32 +63,92 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Collection<Orders> findOrdersInStatusWaitingForSpecialistSuggestion(Customer customer) {
+        Set<Orders> customOrderSet = new HashSet<>(orderRepository.findOrdersInStatusWaitingForSpecialistSuggestion(customer));
+        try {
+            if (customOrderSet.size() == 0) {
+                throw new CustomNoResultException("no order exist with this request");
+            }
+
+        } catch (CustomNoResultException cnr) {
+            System.out.println(cnr.getMessage());
+        }
         return orderRepository.findOrdersInStatusWaitingForSpecialistSuggestion(customer);
+
     }
 
     @Override
     public Collection<Orders> findOrdersInStatusWaitingForSpecialistSelection(Customer customer) {
+        Set<Orders> customOrderSet = new HashSet<>(orderRepository.findOrdersInStatusWaitingForSpecialistSelection(customer));
+        try {
+            if (customOrderSet.size() == 0) {
+                throw new CustomNoResultException("no order exist with this request");
+            }
+
+        } catch (CustomNoResultException cnr) {
+            System.out.println(cnr.getMessage());
+        }
         return orderRepository.findOrdersInStatusWaitingForSpecialistSelection(customer);
+
     }
 
     @Override
     public Collection<Orders> findOrdersInStatusWaitingForSpecialistToWorkplace(Customer customer) {
+        Set<Orders> customOrderSet = new HashSet<>(orderRepository.findOrdersInStatusWaitingForSpecialistToWorkplace(customer));
+        try {
+            if (customOrderSet.size() == 0) {
+                throw new CustomNoResultException("no order exist with this request");
+            }
+
+        } catch (CustomNoResultException cnr) {
+            System.out.println(cnr.getMessage());
+        }
         return orderRepository.findOrdersInStatusWaitingForSpecialistToWorkplace(customer);
+
     }
 
     @Override
     public Collection<Orders> findOrdersInStatusStarted(Customer customer) {
+        Set<Orders> customOrderSet = new HashSet<>(orderRepository.findOrdersInStatusStarted(customer));
+        try {
+            if (customOrderSet.size() == 0) {
+                throw new CustomNoResultException("no order exist with this request");
+            }
+
+        } catch (CustomNoResultException cnr) {
+            System.out.println(cnr.getMessage());
+        }
         return orderRepository.findOrdersInStatusStarted(customer);
+
     }
 
     @Override
     public Collection<Orders> findOrdersInStatusPaid(Customer customer) {
+        Set<Orders> customOrderSet = new HashSet<>(orderRepository.findOrdersInStatusPaid(customer));
+        try {
+            if (customOrderSet.size() == 0) {
+                throw new CustomNoResultException("no order exist with this request");
+            }
+
+        } catch (CustomNoResultException cnr) {
+            System.out.println(cnr.getMessage());
+        }
         return orderRepository.findOrdersInStatusPaid(customer);
+
     }
 
     @Override
     public Collection<Orders> findOrdersInStatusDone(Customer customer) {
+        Set<Orders> customOrderSet = new HashSet<>(orderRepository.findOrdersInStatusDone(customer));
+        try {
+            if (customOrderSet.size() == 0) {
+                throw new CustomNoResultException("no order exist with this request");
+            }
+
+        } catch (CustomNoResultException cnr) {
+            System.out.println(cnr.getMessage());
+        }
         return orderRepository.findOrdersInStatusDone(customer);
+
     }
 
 

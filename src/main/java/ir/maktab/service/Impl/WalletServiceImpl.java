@@ -12,20 +12,22 @@ import org.hibernate.TransactionException;
 import java.util.Collection;
 import java.util.Optional;
 
-public class WalletServiceImpl  implements WalletService{
+/**
+ * this class design for work with wallet instance and all thing that related with wallet.
+ *     Crud method is implemented
+ *    and other required method that use walletRepository to occur something(read,write)in database
+ *
+ */
+public class WalletServiceImpl implements WalletService {
     private Session session;
     private Transaction transaction;
     private WalletRepository walletRepository;
 
     public WalletServiceImpl(Session session) {
         this.session = session;
-        transaction=session.getTransaction();
-        walletRepository=new WalletRepositoryImpl(session);
+        transaction = session.getTransaction();
+        walletRepository = new WalletRepositoryImpl(session);
     }
-
-
-
-
 
     public Wallet update(Wallet wallet) {
         try {
@@ -36,8 +38,6 @@ public class WalletServiceImpl  implements WalletService{
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            walletRepository.getSession().close();
         }
         return wallet;
     }
@@ -52,8 +52,6 @@ public class WalletServiceImpl  implements WalletService{
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            walletRepository.getSession().close();
         }
         return wallet;
     }
@@ -75,8 +73,8 @@ public class WalletServiceImpl  implements WalletService{
 
 
     public Wallet createWallet() {
-        Wallet wallet=new Wallet(0d);
-            walletRepository.save(wallet);
+        Wallet wallet = new Wallet(0d);
+        walletRepository.save(wallet);
         return wallet;
     }
 
